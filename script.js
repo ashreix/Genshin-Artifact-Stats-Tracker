@@ -1,247 +1,310 @@
 // ====== Predefined lists ======
-const allCharacters = ["Kinich", "Aino", "Zhongli"];
-const artifactSets = ["Deepwood", "Golden Troupe", "Silken Moon"];
+const allCharacters = ["Kinich", "Aino", "Zhongli", "Xiao", "Bennett"]; // extend as needed
+const artifactSets = ["Deepwood", "Golden Troupe", "Silken Moon", "Gladiator's Finale"];
 const mainStats = ["Crit Rate", "Crit Dmg", "Atk%", "EM", "ER", "Dendro DMG%"];
 const subStats = ["Crit Rate", "Crit Dmg", "Atk%", "EM", "ER"];
 
-// ====== Load or initialize data ======
+// ====== State (persisted) ======
 let characters = JSON.parse(localStorage.getItem('genshinTracker') || '[]');
 
+// ====== DOM references ======
 const charactersContainer = document.getElementById('charactersContainer');
 const trackerContainer = document.getElementById('trackerContainer');
 const trackerFilter = document.getElementById('trackerFilter');
-const addCharacterBtn = document.getElementById('addCharacterBtn');
+const addCharSelect = document.getElementById('addCharSelect');
+const addCharBtn = document.getElementById('addCharBtn');
 
-addCharacterBtn.addEventListener('click', showAddCharacterDropdown);
+// ====== Init UI ======
+populateAddCharSelect();
+addCharBtn.addEventListener('click', onAddCharacter);
 trackerFilter.addEventListener('change', renderTracker);
 
 renderCharacters();
 updateTrackerFilter();
 renderTracker();
 
-// ====== Functions ======
+// ====== Helpers ======
 
-// Show a dropdown to select character to add
-function showAddCharacterDropdown() {
-  // Create temporary select element
-  const tempSelect = document.createElement('select');
-  const defaultOption = document.createElement('option');
-  defaultOption.value = '';
-  defaultOption.textContent = '-- Select Character --';
-  tempSelect.appendChild(defaultOption);
-
-  allCharacters.forEach(c => {
-    if (!characters.some(char => char.name === c)) {
-      const option = document.createElement('option');
-      option.value = c;
-      option.textContent = c;
-      tempSelect.appendChild(option);
-    }
-  });
-
-  if (!tempSelect.options.length || tempSelect.options.length === 1) return alert("All characters added!");
-
-  // Listen for selection
-  tempSelect.addEventListener('change', () => {
-    const selected = tempSelect.value;
-    if (!selected) return;
-
-    characters.push({
-      name: selected,
-      artifactSets: [],
-      circletStats: [],
-      gobletStats: [],
-      sandsStats: [],
-      subStats: []
-    });
-    saveData();
-    renderCharacters();
-    updateTrackerFilter();
-    renderTracker();
-    tempSelect.remove(); // remove dropdown
-  });
-
-  document.body.appendChild(tempSelect);
+function saveData() {
+  localStorage.setItem('genshinTracker', JSON.stringify(characters));
 }
 
-// Render all character cards
+function populateAddCharSelect() {
+  addCharSelect.innerHTML = '';
+  const emptyOpt = document.createElement('option');
+  emptyOpt.value = '';
+  emptyOpt.textContent = '-- Choose character --';
+  addCharSelect.appendChild(emptyOpt);
+
+  allCharacters.forEach(c => {
+    if (characters.some(ch => ch.name === c)) return; // don't show already added
+    const opt = document.createElement('option');
+    opt.value = c;
+    opt.textContent = c;
+    addCharSelect.appendChild(opt);
+  });
+}
+
+function onAddCharacter() {
+  const name = addCharSelect.value;
+  if (!name) return alert('Select a character to add.');
+  const newChar = {
+    name,
+    artifactSets: [],     // max 3
+    circletStats: [],     // dynamic
+    gobletStats: [],
+    sandsStats: [],
+    subStats: []
+  };
+  characters.push(newChar);
+  saveData();
+  populateAddCharSelect();
+  renderCharacters();
+  updateTrackerFilter();
+  renderTracker();
+}
+
+// Utility: rebuild arrayRef from the select-wrapper elements
+function rebuildArrayRefFromContainer(container, arrayRef) {
+  const selects = container.querySelectorAll('select');
+  const vals = Array.from(selects).map(s => s.value).filter(v => v);
+  arrayRef.length = 0;
+  arrayRef.push(...vals);
+}
+
+// ====== Rendering characters ======
+
 function renderCharacters() {
   charactersContainer.innerHTML = '';
-
-  characters.forEach(char => {
+  characters.forEach((char, charIdx) => {
     const card = document.createElement('div');
     card.className = 'character-card';
 
     // Header
     const header = document.createElement('div');
     header.className = 'character-header';
-    header.textContent = char.name;
+    const title = document.createElement('div');
+    title.className = 'character-title';
+    title.textContent = char.name;
+    header.appendChild(title);
 
-    // Remove character button
+    const actions = document.createElement('div');
+    actions.className = 'header-actions';
     const removeCharBtn = document.createElement('button');
     removeCharBtn.textContent = 'Remove Character';
-    removeCharBtn.style.marginLeft = '10px';
+    removeCharBtn.className = 'small-btn';
     removeCharBtn.addEventListener('click', () => {
       if (!confirm(`Remove character ${char.name}?`)) return;
-      characters = characters.filter(c => c.name !== char.name);
+      characters.splice(charIdx, 1);
       saveData();
+      populateAddCharSelect();
       renderCharacters();
       updateTrackerFilter();
       renderTracker();
     });
-    header.appendChild(removeCharBtn);
+    actions.appendChild(removeCharBtn);
+    header.appendChild(actions);
+
     card.appendChild(header);
 
-    // Artifact Sets
-    card.appendChild(createSmartDropdownSection(char.artifactSets, artifactSets, "Artifact Set", 3));
+    // Artifact Set section (max 3)
+    card.appendChild(createSectionElement('Artifact Set', char, 'artifactSets', artifactSets, 3));
 
     // Circlet
-    card.appendChild(createSmartDropdownSection(char.circletStats, mainStats, "Circlet", 10));
+    card.appendChild(createSectionElement('Circlet', char, 'circletStats', mainStats, 10));
 
     // Goblet
-    card.appendChild(createSmartDropdownSection(char.gobletStats, mainStats, "Goblet", 10));
+    card.appendChild(createSectionElement('Goblet', char, 'gobletStats', mainStats, 10));
 
     // Sands
-    card.appendChild(createSmartDropdownSection(char.sandsStats, mainStats, "Sands", 10));
+    card.appendChild(createSectionElement('Sands', char, 'sandsStats', mainStats, 10));
 
     // Substats
-    card.appendChild(createSmartDropdownSection(char.subStats, subStats, "Substat", 10));
+    card.appendChild(createSectionElement('Substat', char, 'subStats', subStats, 10));
 
     charactersContainer.appendChild(card);
   });
 }
 
-// Smart dynamic dropdown section
-function createDynamicDropdownSection(arrayRef, options, label, maxLength = 10, protectFirst = false) {
-  const container = document.createElement('div');
-  container.className = 'artifact-row';
+/**
+ * Creates a DOM element for a labeled section that can contain multiple select-wrappers.
+ * - fieldName: key in character object, e.g. 'artifactSets'
+ * - options: array of option strings
+ * - maxLen: maximum number of selects allowed (artifact sets will use 3)
+ *
+ * Behavior:
+ *  - Always ensure at least one select exists (non-removable).
+ *  - When last select has a value, append a new empty select (if below maxLen).
+ *  - Remove button removes the select and rebuilds the arrayRef.
+ */
+function createSectionElement(labelText, charObj, fieldName, options, maxLen) {
+  const section = document.createElement('div');
+  section.className = 'section';
 
-  const sectionLabel = document.createElement('span');
-  sectionLabel.textContent = label + ":";
-  container.appendChild(sectionLabel);
+  const label = document.createElement('label');
+  label.textContent = labelText + ':';
+  section.appendChild(label);
 
-  function rebuild() {
-    // Clear all dropdowns except the label
-    [...container.children].forEach((child, i) => {
-      if (i > 0) container.removeChild(child);
-    });
+  const selectsContainer = document.createElement('div');
+  selectsContainer.style.display = 'flex';
+  selectsContainer.style.alignItems = 'center';
+  selectsContainer.style.flexWrap = 'wrap';
+  selectsContainer.style.gap = '6px';
 
-    // Ensure arrayRef has at least one slot when protectFirst is true
-    if (protectFirst && arrayRef.length === 0) arrayRef.push("");
-
-    // Rebuild dropdowns
-    arrayRef.forEach((val, idx) => {
-      addDropdown(val, idx === 0 && protectFirst);
-    });
-
-    // Always add an empty dropdown if last one has a value
-    if (arrayRef.length < maxLength) {
-      if (arrayRef[arrayRef.length - 1] !== "") {
-        arrayRef.push("");
-        addDropdown("", false);
-      }
-    }
-  }
-
-  function addDropdown(value, isProtected) {
+  // Helper to create a select-wrapper containing <select> and maybe a remove button
+  function createSelectWrapper(value = '', isRemovable = true) {
     const wrapper = document.createElement('div');
-    wrapper.style.display = "flex";
-    wrapper.style.alignItems = "center";
-    wrapper.style.gap = "6px";
+    wrapper.className = 'select-wrapper';
 
-    const select = document.createElement('select');
-
-    const emptyOption = document.createElement('option');
-    emptyOption.value = "";
-    emptyOption.textContent = "";
-    select.appendChild(emptyOption);
-
+    const sel = document.createElement('select');
+    const emptyOpt = document.createElement('option');
+    emptyOpt.value = '';
+    emptyOpt.textContent = '';
+    sel.appendChild(emptyOpt);
     options.forEach(opt => {
       const o = document.createElement('option');
       o.value = opt;
       o.textContent = opt;
-      select.appendChild(o);
+      sel.appendChild(o);
     });
+    sel.value = value;
+    wrapper.appendChild(sel);
 
-    select.value = value;
-
-    wrapper.appendChild(select);
-
-    // REMOVE BUTTON (but not for protected first dropdown)
-    if (!isProtected) {
-      const removeBtn = document.createElement('button');
-      removeBtn.className = 'remove-btn';
-      removeBtn.textContent = "Remove";
-
-      removeBtn.addEventListener('click', () => {
-        const index = Array.from(container.querySelectorAll("select")).indexOf(select);
-
-        // Remove this entry
-        arrayRef.splice(index, 1);
-
-        // Fix: Never allow arrayRef to be empty when protectFirst = true
-        if (protectFirst && arrayRef.length === 0) arrayRef.push("");
-
+    if (isRemovable) {
+      const rem = document.createElement('button');
+      rem.className = 'remove-btn';
+      rem.textContent = 'Remove';
+      rem.addEventListener('click', () => {
+        wrapper.remove();
+        rebuildArrayRefFromContainer(selectsContainer, charObj[fieldName]);
+        // ensure at least one select remains
+        ensureAtLeastOneSelect();
         saveData();
         updateTrackerFilter();
         renderTracker();
-        rebuild();
       });
-
-      wrapper.appendChild(removeBtn);
+      wrapper.appendChild(rem);
     }
 
-    select.addEventListener('change', () => {
-      const selects = container.querySelectorAll("select");
-
-      // Sync arrayRef
-      arrayRef.length = 0;
-      selects.forEach(s => {
-        if (s.value !== "") arrayRef.push(s.value);
-      });
-
+    sel.addEventListener('change', () => {
+      rebuildArrayRefFromContainer(selectsContainer, charObj[fieldName]);
       saveData();
       updateTrackerFilter();
       renderTracker();
-      rebuild();
+
+      // If last select has a value and we haven't hit maxLen, append an empty removable select
+      const allSelects = selectsContainer.querySelectorAll('select');
+      const lastSel = allSelects[allSelects.length - 1];
+      if (lastSel && lastSel.value && allSelects.length < maxLen) {
+        // append new empty removable select
+        selectsContainer.appendChild(createSelectWrapper('', true));
+      }
     });
 
-    container.appendChild(wrapper);
+    return wrapper;
   }
 
-  // Initial build
-  rebuild();
+  // Ensure container has initial select(s) based on saved data
+  function ensureAtLeastOneSelect() {
+    const currentSelects = selectsContainer.querySelectorAll('select');
+    if (currentSelects.length === 0) {
+      // add one non-removable empty select
+      selectsContainer.appendChild(createSelectWrapper('', false));
+    }
+  }
 
-  return container;
+  // populate from existing charObj data
+  if (Array.isArray(charObj[fieldName]) && charObj[fieldName].length > 0) {
+    charObj[fieldName].forEach((val, idx) => {
+      // first element is non-removable only if it's the first select we create
+      const isFirst = idx === 0;
+      // For first select, make non-removable (per request)
+      selectsContainer.appendChild(createSelectWrapper(val, !isFirst ? true : false));
+    });
+    // ensure a trailing empty select is present (if below max)
+    const currentSelects = selectsContainer.querySelectorAll('select');
+    if (currentSelects.length < maxLen) {
+      const lastSel = currentSelects[currentSelects.length - 1];
+      if (lastSel && lastSel.value) selectsContainer.appendChild(createSelectWrapper('', true));
+    }
+  } else {
+    // no saved entries: create one non-removable empty select
+    selectsContainer.appendChild(createSelectWrapper('', false));
+  }
+
+  // Add button to force add a new set (useful for artifact sets limited to maxLen)
+  const addBtn = document.createElement('button');
+  addBtn.className = 'small-btn';
+  addBtn.textContent = '+';
+  addBtn.addEventListener('click', () => {
+    const currentCount = selectsContainer.querySelectorAll('select').length;
+    if (currentCount >= maxLen) {
+      alert(`Max ${maxLen} entries reached for ${labelText}.`);
+      return;
+    }
+    selectsContainer.appendChild(createSelectWrapper('', true));
+    saveData();
+    updateTrackerFilter();
+    renderTracker();
+  });
+
+  section.appendChild(selectsContainer);
+  // show add button only if we can still add
+  section.appendChild(addBtn);
+
+  return section;
 }
 
-// Tracker logic
+// ===== Tracker functions =====
+
 function updateTrackerFilter() {
-  while (trackerFilter.options.length > 1) trackerFilter.remove(1);
+  // collect unique sets across characters
   const sets = new Set();
-  characters.forEach(c => c.artifactSets.forEach(s => sets.add(s)));
-  sets.forEach(s => {
-    const option = document.createElement('option');
-    option.value = s;
-    option.textContent = s;
-    trackerFilter.appendChild(option);
+  characters.forEach(c => {
+    (c.artifactSets || []).forEach(s => { if (s) sets.add(s); });
+  });
+
+  // rebuild options
+  trackerFilter.innerHTML = '';
+  const empty = document.createElement('option');
+  empty.value = '';
+  empty.textContent = '-- Select a set --';
+  trackerFilter.appendChild(empty);
+
+  Array.from(sets).sort().forEach(s => {
+    const opt = document.createElement('option');
+    opt.value = s;
+    opt.textContent = s;
+    trackerFilter.appendChild(opt);
   });
 }
 
 function renderTracker() {
   trackerContainer.innerHTML = '';
   const filterSet = trackerFilter.value;
-  if (!filterSet) return;
+  if (!filterSet) return; // show nothing when no set selected
 
-  characters.forEach(char => {
-    if (!char.artifactSets.includes(filterSet)) return;
-    const div = document.createElement('div');
-    div.textContent = `${char.name}: Sets=${char.artifactSets.join(', ')}, Circlet=${char.circletStats.join(', ')}, Goblet=${char.gobletStats.join(', ')}, Sands=${char.sandsStats.join(', ')}, Substats=${char.subStats.join(', ')}`;
-    trackerContainer.appendChild(div);
+  // For each character that includes the set, show the relevant details for that set
+  characters.forEach(c => {
+    if (!c.artifactSets || !c.artifactSets.includes(filterSet)) return;
+
+    const card = document.createElement('div');
+    card.className = 'character-card';
+    card.style.marginBottom = '8px';
+    const title = document.createElement('div');
+    title.className = 'character-title';
+    title.textContent = c.name;
+    card.appendChild(title);
+
+    const info = document.createElement('div');
+    info.style.whiteSpace = 'pre-wrap';
+    info.textContent = `Sets: ${c.artifactSets.join(', ') || '-'}
+Circlet: ${c.circletStats.join(', ') || '-'}
+Goblet: ${c.gobletStats.join(', ') || '-'}
+Sands: ${c.sandsStats.join(', ') || '-'}
+Substats: ${c.subStats.join(', ') || '-'}`;
+    card.appendChild(info);
+
+    trackerContainer.appendChild(card);
   });
-}
-
-// Save/load
-function saveData() {
-  localStorage.setItem('genshinTracker', JSON.stringify(characters));
 }
