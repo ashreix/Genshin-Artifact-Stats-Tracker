@@ -87,7 +87,7 @@ function renderCharacters() {
 }
 
 // Updated dynamic dropdown section
-function createDynamicDropdownSection(arrayRef, options, label, maxLength = 10, firstAlwaysExists = false) {
+function createDynamicDropdownSection(arrayRef, options, label, maxLength = 10) {
   const container = document.createElement('div');
   container.className = 'artifact-row';
 
@@ -114,19 +114,26 @@ function createDynamicDropdownSection(arrayRef, options, label, maxLength = 10, 
     select.value = value;
     container.appendChild(select);
 
-    // Remove button
+    // Remove button (only if removable)
+    let removeBtn;
     if (removable) {
-      const removeBtn = document.createElement('button');
+      removeBtn = document.createElement('button');
       removeBtn.className = 'remove-btn';
       removeBtn.textContent = 'Remove';
       removeBtn.addEventListener('click', () => {
-        const idx = arrayRef.indexOf(select.value);
-        if (idx !== -1) arrayRef.splice(idx, 1);
+        arrayRef.splice(arrayRef.indexOf(select.value), 1);
         container.removeChild(select);
         container.removeChild(removeBtn);
         saveData();
         updateTrackerFilter();
         renderTracker();
+
+        // Ensure at least one empty dropdown exists
+        const allSelects = Array.from(container.querySelectorAll('select'));
+        if (!allSelects.length) addDropdown('', false);
+        else if (!allSelects[allSelects.length - 1].value && allSelects.length < maxLength) {
+          addDropdown('', true);
+        }
       });
       container.appendChild(removeBtn);
     }
@@ -141,14 +148,17 @@ function createDynamicDropdownSection(arrayRef, options, label, maxLength = 10, 
 
       // Add new empty dropdown if last has value and limit not reached
       const allSelects = Array.from(container.querySelectorAll('select'));
-      if (allSelects[allSelects.length - 1].value && arrayRef.length < maxLength) addDropdown('', true);
+      if (allSelects[allSelects.length - 1].value && arrayRef.length < maxLength) {
+        addDropdown('', true);
+      }
     });
   }
 
+  // Initialize dropdowns
   if (arrayRef.length) {
-    arrayRef.forEach((val, i) => addDropdown(val, i !== 0 || !firstAlwaysExists));
+    arrayRef.forEach((val, i) => addDropdown(val, i !== 0)); // first dropdown not removable
   } else {
-    addDropdown('', false); // first dropdown not removable
+    addDropdown('', false); // always start with one non-removable dropdown
   }
 
   return container;
