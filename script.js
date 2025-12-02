@@ -95,71 +95,70 @@ function createDynamicDropdownSection(arrayRef, options, label, maxLength = 10) 
   sectionLabel.textContent = label + ":";
   container.appendChild(sectionLabel);
 
-  function addDropdown(value = '', removable = true) {
-    if (arrayRef.length >= maxLength) return;
+  function renderDropdowns() {
+    // Clear existing dropdowns
+    container.querySelectorAll('select').forEach(s => container.removeChild(s));
 
-    const select = document.createElement('select');
-    const emptyOption = document.createElement('option');
-    emptyOption.value = '';
-    emptyOption.textContent = '';
-    select.appendChild(emptyOption);
+    // Ensure at least one empty at end
+    const tempArray = [...arrayRef];
+    if (tempArray.length === 0 || tempArray[tempArray.length - 1] !== '') tempArray.push('');
 
-    options.forEach(opt => {
-      const option = document.createElement('option');
-      option.value = opt;
-      option.textContent = opt;
-      select.appendChild(option);
-    });
+    tempArray.slice(0, maxLength).forEach((val, idx) => {
+      const select = document.createElement('select');
+      const emptyOption = document.createElement('option');
+      emptyOption.value = '';
+      emptyOption.textContent = '';
+      select.appendChild(emptyOption);
 
-    select.value = value;
-    container.appendChild(select);
+      options.forEach(opt => {
+        const option = document.createElement('option');
+        option.value = opt;
+        option.textContent = opt;
+        select.appendChild(option);
+      });
 
-    // Remove button (only if removable)
-    let removeBtn;
-    if (removable) {
-      removeBtn = document.createElement('button');
-      removeBtn.className = 'remove-btn';
-      removeBtn.textContent = 'Remove';
-      removeBtn.addEventListener('click', () => {
-        arrayRef.splice(arrayRef.indexOf(select.value), 1);
-        container.removeChild(select);
-        container.removeChild(removeBtn);
+      select.value = val;
+      container.appendChild(select);
+
+      select.addEventListener('change', () => {
+        const allValues = Array.from(container.querySelectorAll('select')).map(s => s.value);
+
+        // Remove gaps if more than 2 filled
+        const filledValues = allValues.filter(v => v);
+        if (filledValues.length > 2) {
+          // If any non-last cleared, push values up
+          const lastIndex = allValues.length - 1;
+          for (let i = 0; i < lastIndex; i++) {
+            if (!allValues[i]) {
+              // push values up
+              allValues.splice(i, 1);
+              allValues.push('');
+              break;
+            }
+          }
+        }
+
+        // Remove extra empty dropdowns at the end
+        while (allValues.length > 1 && allValues[allValues.length - 2] && allValues[allValues.length - 1] === '') {
+          allValues.pop();
+          allValues.push(''); // always keep 1 empty at end
+        }
+
+        arrayRef.length = 0;
+        arrayRef.push(...allValues.filter((v, i) => v || i === allValues.length - 1)); // keep last empty
         saveData();
         updateTrackerFilter();
         renderTracker();
 
-        // Ensure at least one empty dropdown exists
-        const allSelects = Array.from(container.querySelectorAll('select'));
-        if (!allSelects.length) addDropdown('', false);
-        else if (!allSelects[allSelects.length - 1].value && allSelects.length < maxLength) {
-          addDropdown('', true);
-        }
+        // Re-render to adjust dropdowns
+        renderDropdowns();
       });
-      container.appendChild(removeBtn);
-    }
-
-    select.addEventListener('change', () => {
-      const vals = Array.from(container.querySelectorAll('select')).map(s => s.value).filter(v => v);
-      arrayRef.length = 0;
-      arrayRef.push(...vals);
-      saveData();
-      updateTrackerFilter();
-      renderTracker();
-
-      // Add new empty dropdown if last has value and limit not reached
-      const allSelects = Array.from(container.querySelectorAll('select'));
-      if (allSelects[allSelects.length - 1].value && arrayRef.length < maxLength) {
-        addDropdown('', true);
-      }
     });
   }
 
-  // Initialize dropdowns
-  if (arrayRef.length) {
-    arrayRef.forEach((val, i) => addDropdown(val, i !== 0)); // first dropdown not removable
-  } else {
-    addDropdown('', false); // always start with one non-removable dropdown
-  }
+  // Initialize
+  if (!arrayRef.length) arrayRef.push('');
+  renderDropdowns();
 
   return container;
 }
