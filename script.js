@@ -112,74 +112,106 @@ function renderCharacters() {
 }
 
 // Smart dynamic dropdown section
-function createSmartDropdownSection(arrayRef, options, label, maxLength = 10) {
+function createDynamicDropdownSection(arrayRef, options, label, maxLength = 10, protectFirst = false) {
   const container = document.createElement('div');
   container.className = 'artifact-row';
+
   const sectionLabel = document.createElement('span');
   sectionLabel.textContent = label + ":";
   container.appendChild(sectionLabel);
 
-  function renderDropdowns() {
-    // Clear existing selects
-    container.querySelectorAll('select').forEach(s => s.remove());
+  function rebuild() {
+    // Clear all dropdowns except the label
+    [...container.children].forEach((child, i) => {
+      if (i > 0) container.removeChild(child);
+    });
 
-    // Ensure at least one empty dropdown at end
-    const tempArray = [...arrayRef];
-    if (tempArray.length === 0 || tempArray[tempArray.length - 1] !== '') tempArray.push('');
+    // Ensure arrayRef has at least one slot when protectFirst is true
+    if (protectFirst && arrayRef.length === 0) arrayRef.push("");
 
-    tempArray.slice(0, maxLength).forEach((val, idx) => {
-      const select = document.createElement('select');
-      const emptyOption = document.createElement('option');
-      emptyOption.value = '';
-      emptyOption.textContent = '';
-      select.appendChild(emptyOption);
+    // Rebuild dropdowns
+    arrayRef.forEach((val, idx) => {
+      addDropdown(val, idx === 0 && protectFirst);
+    });
 
-      options.forEach(opt => {
-        const option = document.createElement('option');
-        option.value = opt;
-        option.textContent = opt;
-        select.appendChild(option);
-      });
+    // Always add an empty dropdown if last one has a value
+    if (arrayRef.length < maxLength) {
+      if (arrayRef[arrayRef.length - 1] !== "") {
+        arrayRef.push("");
+        addDropdown("", false);
+      }
+    }
+  }
 
-      select.value = val;
-      container.appendChild(select);
+  function addDropdown(value, isProtected) {
+    const wrapper = document.createElement('div');
+    wrapper.style.display = "flex";
+    wrapper.style.alignItems = "center";
+    wrapper.style.gap = "6px";
 
-      select.addEventListener('change', () => {
-        let allValues = Array.from(container.querySelectorAll('select')).map(s => s.value);
+    const select = document.createElement('select');
 
-        // Remove empty in middle if more than 2 filled (push values up)
-        const filled = allValues.filter(v => v);
-        if (filled.length > 2) {
-          for (let i = 0; i < allValues.length - 1; i++) {
-            if (!allValues[i]) {
-              allValues.splice(i, 1);
-              allValues.push('');
-              break;
-            }
-          }
-        }
+    const emptyOption = document.createElement('option');
+    emptyOption.value = "";
+    emptyOption.textContent = "";
+    select.appendChild(emptyOption);
 
-        // Remove extra empty at end, keep one
-        while (allValues.length > 1 && allValues[allValues.length - 2] && allValues[allValues.length - 1] === '') {
-          allValues.pop();
-          allValues.push('');
-        }
+    options.forEach(opt => {
+      const o = document.createElement('option');
+      o.value = opt;
+      o.textContent = opt;
+      select.appendChild(o);
+    });
 
-        // Update arrayRef
-        arrayRef.length = 0;
-        arrayRef.push(...allValues.filter((v, i) => v || i === allValues.length - 1));
+    select.value = value;
+
+    wrapper.appendChild(select);
+
+    // REMOVE BUTTON (but not for protected first dropdown)
+    if (!isProtected) {
+      const removeBtn = document.createElement('button');
+      removeBtn.className = 'remove-btn';
+      removeBtn.textContent = "Remove";
+
+      removeBtn.addEventListener('click', () => {
+        const index = Array.from(container.querySelectorAll("select")).indexOf(select);
+
+        // Remove this entry
+        arrayRef.splice(index, 1);
+
+        // Fix: Never allow arrayRef to be empty when protectFirst = true
+        if (protectFirst && arrayRef.length === 0) arrayRef.push("");
 
         saveData();
         updateTrackerFilter();
         renderTracker();
-
-        renderDropdowns();
+        rebuild();
       });
+
+      wrapper.appendChild(removeBtn);
+    }
+
+    select.addEventListener('change', () => {
+      const selects = container.querySelectorAll("select");
+
+      // Sync arrayRef
+      arrayRef.length = 0;
+      selects.forEach(s => {
+        if (s.value !== "") arrayRef.push(s.value);
+      });
+
+      saveData();
+      updateTrackerFilter();
+      renderTracker();
+      rebuild();
     });
+
+    container.appendChild(wrapper);
   }
 
-  if (!arrayRef.length) arrayRef.push('');
-  renderDropdowns();
+  // Initial build
+  rebuild();
+
   return container;
 }
 
