@@ -9,11 +9,14 @@ let characters = JSON.parse(localStorage.getItem('genshinTracker') || '[]');
 
 const charactersContainer = document.getElementById('charactersContainer');
 const trackerContainer = document.getElementById('trackerContainer');
+const trackerFilter = document.getElementById('trackerFilter');
 const addCharacterBtn = document.getElementById('addCharacterBtn');
 
 addCharacterBtn.addEventListener('click', showAddCharacterDialog);
+trackerFilter.addEventListener('change', renderTracker);
 
 renderCharacters();
+updateTrackerFilter();
 renderTracker();
 
 // ====== Functions ======
@@ -21,9 +24,8 @@ renderTracker();
 function showAddCharacterDialog() {
   const charName = prompt("Enter character name:\nAvailable: " + allCharacters.join(", "));
   if (!charName || !allCharacters.includes(charName)) return alert("Invalid character name!");
-  // Avoid duplicates
   if (characters.some(c => c.name === charName)) return alert("Character already added!");
-  
+
   const newChar = {
     name: charName,
     artifactSets: [],
@@ -35,6 +37,7 @@ function showAddCharacterDialog() {
   characters.push(newChar);
   saveData();
   renderCharacters();
+  updateTrackerFilter();
   renderTracker();
 }
 
@@ -49,8 +52,8 @@ function renderCharacters() {
     header.textContent = char.name;
     card.appendChild(header);
 
-    // Artifact Sets
-    card.appendChild(createDynamicDropdownSection(char.artifactSets, artifactSets, "Artifact Set"));
+    // Artifact Sets (max 3)
+    card.appendChild(createDynamicDropdownSection(char.artifactSets, artifactSets, "Artifact Set", 3));
 
     // Circlet
     card.appendChild(createDynamicDropdownSection(char.circletStats, mainStats, "Circlet"));
@@ -68,15 +71,17 @@ function renderCharacters() {
   });
 }
 
-function createDynamicDropdownSection(arrayRef, options, label) {
+function createDynamicDropdownSection(arrayRef, options, label, maxLength = 10) {
   const container = document.createElement('div');
   container.className = 'artifact-row';
-  
+
   const sectionLabel = document.createElement('span');
   sectionLabel.textContent = label + ":";
   container.appendChild(sectionLabel);
 
   function addDropdown(value = '') {
+    if (arrayRef.length >= maxLength) return;
+
     const select = document.createElement('select');
     const emptyOption = document.createElement('option');
     emptyOption.value = '';
@@ -91,44 +96,73 @@ function createDynamicDropdownSection(arrayRef, options, label) {
     });
 
     select.value = value;
+    container.appendChild(select);
+
+    // Remove button
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'remove-btn';
+    removeBtn.textContent = 'Remove';
+    removeBtn.addEventListener('click', () => {
+      const idx = arrayRef.indexOf(select.value);
+      if (idx !== -1) arrayRef.splice(idx, 1);
+      container.removeChild(select);
+      container.removeChild(removeBtn);
+      saveData();
+      updateTrackerFilter();
+      renderTracker();
+    });
+    container.appendChild(removeBtn);
+
     select.addEventListener('change', () => {
-      // Update arrayRef
       const vals = Array.from(container.querySelectorAll('select')).map(s => s.value).filter(v => v);
       arrayRef.length = 0;
       arrayRef.push(...vals);
       saveData();
+      updateTrackerFilter();
       renderTracker();
 
-      // Dynamic addition/removal
-      const selects = container.querySelectorAll('select');
-      if (selects[selects.length - 1].value && selects.length < 10) addDropdown();
-      if (selects.length > 1 && !selects[selects.length - 2].value) container.removeChild(selects[selects.length - 1]);
+      // Add new empty dropdown if last has value
+      const allSelects = Array.from(container.querySelectorAll('select'));
+      if (allSelects[allSelects.length - 1].value && arrayRef.length < maxLength) addDropdown();
     });
-
-    container.insertBefore(select, container.querySelector('span').nextSibling);
   }
 
-  // Initially add one dropdown
   if (arrayRef.length) arrayRef.forEach(val => addDropdown(val));
   else addDropdown();
 
   return container;
 }
 
-function renderTracker() {
-  trackerContainer.innerHTML = '';
-  const setFilter = prompt("Enter artifact set to filter tracker (leave empty to show all):");
+// Tracker
 
-  characters.forEach(char => {
-    char.artifactSets.forEach(setName => {
-      if (setFilter && setName !== setFilter) return;
-      const div = document.createElement('div');
-      div.textContent = `${char.name}: Sets=${char.artifactSets.join(', ')}, Circlet=${char.circletStats.join(', ')}, Goblet=${char.gobletStats.join(', ')}, Sands=${char.sandsStats.join(', ')}, Substats=${char.subStats.join(', ')}`;
-      trackerContainer.appendChild(div);
-    });
+function updateTrackerFilter() {
+  // Clear existing options except first
+  while (trackerFilter.options.length > 1) trackerFilter.remove(1);
+
+  const sets = new Set();
+  characters.forEach(c => c.artifactSets.forEach(s => sets.add(s)));
+  sets.forEach(s => {
+    const option = document.createElement('option');
+    option.value = s;
+    option.textContent = s;
+    trackerFilter.appendChild(option);
   });
 }
 
+function renderTracker() {
+  trackerContainer.innerHTML = '';
+  const filterSet = trackerFilter.value;
+  if (!filterSet) return; // Show nothing if no set selected
+
+  characters.forEach(char => {
+    if (!char.artifactSets.includes(filterSet)) return;
+    const div = document.createElement('div');
+    div.textContent = `${char.name}: Sets=${char.artifactSets.join(', ')}, Circlet=${char.circletStats.join(', ')}, Goblet=${char.gobletStats.join(', ')}, Sands=${char.sandsStats.join(', ')}, Substats=${char.subStats.join(', ')}`;
+    trackerContainer.appendChild(div);
+  });
+}
+
+// Save/load
 function saveData() {
   localStorage.setItem('genshinTracker', JSON.stringify(characters));
 }
