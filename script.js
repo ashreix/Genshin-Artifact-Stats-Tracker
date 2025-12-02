@@ -50,28 +50,44 @@ function renderCharacters() {
     const header = document.createElement('div');
     header.className = 'character-header';
     header.textContent = char.name;
+
+    // Remove character button
+    const removeCharBtn = document.createElement('button');
+    removeCharBtn.textContent = 'Remove Character';
+    removeCharBtn.style.marginLeft = '10px';
+    removeCharBtn.addEventListener('click', () => {
+      if (!confirm(`Remove character ${char.name}?`)) return;
+      characters.splice(idx, 1);
+      saveData();
+      renderCharacters();
+      updateTrackerFilter();
+      renderTracker();
+    });
+
+    header.appendChild(removeCharBtn);
     card.appendChild(header);
 
     // Artifact Sets (max 3)
-    card.appendChild(createDynamicDropdownSection(char.artifactSets, artifactSets, "Artifact Set", 3));
+    card.appendChild(createDynamicDropdownSection(char.artifactSets, artifactSets, "Artifact Set", 3, true));
 
     // Circlet
-    card.appendChild(createDynamicDropdownSection(char.circletStats, mainStats, "Circlet"));
+    card.appendChild(createDynamicDropdownSection(char.circletStats, mainStats, "Circlet", 10, true));
 
     // Goblet
-    card.appendChild(createDynamicDropdownSection(char.gobletStats, mainStats, "Goblet"));
+    card.appendChild(createDynamicDropdownSection(char.gobletStats, mainStats, "Goblet", 10, true));
 
     // Sands
-    card.appendChild(createDynamicDropdownSection(char.sandsStats, mainStats, "Sands"));
+    card.appendChild(createDynamicDropdownSection(char.sandsStats, mainStats, "Sands", 10, true));
 
     // Substats
-    card.appendChild(createDynamicDropdownSection(char.subStats, subStats, "Substat"));
+    card.appendChild(createDynamicDropdownSection(char.subStats, subStats, "Substat", 10, true));
 
     charactersContainer.appendChild(card);
   });
 }
 
-function createDynamicDropdownSection(arrayRef, options, label, maxLength = 10) {
+// Updated dynamic dropdown section
+function createDynamicDropdownSection(arrayRef, options, label, maxLength = 10, firstAlwaysExists = false) {
   const container = document.createElement('div');
   container.className = 'artifact-row';
 
@@ -79,7 +95,7 @@ function createDynamicDropdownSection(arrayRef, options, label, maxLength = 10) 
   sectionLabel.textContent = label + ":";
   container.appendChild(sectionLabel);
 
-  function addDropdown(value = '') {
+  function addDropdown(value = '', removable = true) {
     if (arrayRef.length >= maxLength) return;
 
     const select = document.createElement('select');
@@ -99,19 +115,21 @@ function createDynamicDropdownSection(arrayRef, options, label, maxLength = 10) 
     container.appendChild(select);
 
     // Remove button
-    const removeBtn = document.createElement('button');
-    removeBtn.className = 'remove-btn';
-    removeBtn.textContent = 'Remove';
-    removeBtn.addEventListener('click', () => {
-      const idx = arrayRef.indexOf(select.value);
-      if (idx !== -1) arrayRef.splice(idx, 1);
-      container.removeChild(select);
-      container.removeChild(removeBtn);
-      saveData();
-      updateTrackerFilter();
-      renderTracker();
-    });
-    container.appendChild(removeBtn);
+    if (removable) {
+      const removeBtn = document.createElement('button');
+      removeBtn.className = 'remove-btn';
+      removeBtn.textContent = 'Remove';
+      removeBtn.addEventListener('click', () => {
+        const idx = arrayRef.indexOf(select.value);
+        if (idx !== -1) arrayRef.splice(idx, 1);
+        container.removeChild(select);
+        container.removeChild(removeBtn);
+        saveData();
+        updateTrackerFilter();
+        renderTracker();
+      });
+      container.appendChild(removeBtn);
+    }
 
     select.addEventListener('change', () => {
       const vals = Array.from(container.querySelectorAll('select')).map(s => s.value).filter(v => v);
@@ -121,20 +139,22 @@ function createDynamicDropdownSection(arrayRef, options, label, maxLength = 10) 
       updateTrackerFilter();
       renderTracker();
 
-      // Add new empty dropdown if last has value
+      // Add new empty dropdown if last has value and limit not reached
       const allSelects = Array.from(container.querySelectorAll('select'));
-      if (allSelects[allSelects.length - 1].value && arrayRef.length < maxLength) addDropdown();
+      if (allSelects[allSelects.length - 1].value && arrayRef.length < maxLength) addDropdown('', true);
     });
   }
 
-  if (arrayRef.length) arrayRef.forEach(val => addDropdown(val));
-  else addDropdown();
+  if (arrayRef.length) {
+    arrayRef.forEach((val, i) => addDropdown(val, i !== 0 || !firstAlwaysExists));
+  } else {
+    addDropdown('', false); // first dropdown not removable
+  }
 
   return container;
 }
 
 // Tracker
-
 function updateTrackerFilter() {
   // Clear existing options except first
   while (trackerFilter.options.length > 1) trackerFilter.remove(1);
