@@ -3,29 +3,39 @@
 <head>
   <meta charset="utf-8" />
   <title>Genshin Artifact Tracker</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Genshin Artifact Tracker</h1>
+  <div class="app">
+    <header>
+      <h1>Genshin Artifact Tracker</h1>
+      <div class="top-controls">
+        <button id="addCharacterBtn">➕ Add Character</button>
+        <button id="exportBtn">Export JSON</button>
+        <button id="importBtn">Import JSON</button>
+        <input id="importFile" type="file" accept="application/json" style="display:none" />
+      </div>
+    </header>
 
-  <!-- Add character UI -->
-  <div id="addCharRow">
-    <label for="addCharSelect">Add character:</label>
-    <select id="addCharSelect"></select>
-    <button id="addCharBtn">Add</button>
+    <main>
+      <section id="charactersSection">
+        <h2>Characters</h2>
+        <div id="charactersContainer"></div>
+      </section>
+
+      <section id="trackerSection">
+        <h2>Tracker</h2>
+        <div class="tracker-controls">
+          <label for="trackerFilter">Select Artifact Set:</label>
+          <select id="trackerFilter">
+            <option value="">-- Select a set --</option>
+          </select>
+        </div>
+        <div id="trackerContainer" class="tracker-list"></div>
+      </section>
+    </main>
   </div>
-
-  <h2>Characters</h2>
-  <div id="charactersContainer"></div>
-
-  <h2>Tracker</h2>
-  <div id="trackerRow">
-    <label for="trackerFilter">Filter by Artifact Set:</label>
-    <select id="trackerFilter">
-      <option value="">-- Select a set --</option>
-    </select>
-  </div>
-  <div id="trackerContainer"></div>
 
   <script src="script.js"></script>
 </body>
