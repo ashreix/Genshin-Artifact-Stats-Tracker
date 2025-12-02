@@ -3,36 +3,33 @@
 <head>
   <meta charset="utf-8" />
   <title>Genshin Artifact Tracker</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="app">
+  <div class="wrapper">
     <header>
       <h1>Genshin Artifact Tracker</h1>
-      <div class="top-controls">
-        <button id="addCharacterBtn">➕ Add Character</button>
-        <button id="exportBtn">Export JSON</button>
-        <button id="importBtn">Import JSON</button>
-        <input id="importFile" type="file" accept="application/json" style="display:none" />
+      <div id="addCharacterPanel" class="add-panel">
+        <select id="addCharacterSelect"></select>
+        <button id="addCharacterBtn">Add Character</button>
       </div>
     </header>
 
     <main>
-      <section id="charactersSection">
+      <section>
         <h2>Characters</h2>
         <div id="charactersContainer"></div>
       </section>
 
-      <section id="trackerSection">
+      <section class="tracker-section">
         <h2>Tracker</h2>
         <div class="tracker-controls">
-          <label for="trackerFilter">Select Artifact Set:</label>
+          <label for="trackerFilter">Filter by Artifact Set:</label>
           <select id="trackerFilter">
             <option value="">-- Select a set --</option>
           </select>
         </div>
-        <div id="trackerContainer" class="tracker-list"></div>
+        <div id="trackerContainer" class="tracker-container"></div>
       </section>
     </main>
   </div>
