@@ -1,14 +1,9 @@
 // ======================================================
 // LOAD DATA.JSON (characters, artifacts, stats)
 // ======================================================
-let DATA = null;   // will hold everything from data.json
+let DATA = null;   // holds everything from data.json
 
-let allCharactersMaster = [];
-let artifactSetsMaster = [];
-let mainStatsPools = {};
-let subStatsMaster = [];
-
-// ====== App state (persisted) ======
+// App state
 let characters = JSON.parse(localStorage.getItem('genshinTracker') || '[]');
 
 // DOM refs
@@ -18,17 +13,17 @@ const charactersContainer = document.getElementById('charactersContainer');
 const trackerFilter = document.getElementById('trackerFilter');
 const trackerContainer = document.getElementById('trackerContainer');
 
+let mainStatsPools = {};
+let subStatsMaster = [];
+
 // ======================================================
-// Fetch JSON and start the app
+// Fetch JSON and initialize app
 // ======================================================
 fetch('data.json')
   .then(res => res.json())
   .then(json => {
     DATA = json;
 
-    // Assign master lists
-    allCharactersMaster = DATA.characters || [];
-    artifactSetsMaster = DATA.artifactSets || [];
     mainStatsPools = {
       sands: DATA.mainStats.sands || [],
       goblet: DATA.mainStats.goblet || [],
@@ -36,14 +31,13 @@ fetch('data.json')
     };
     subStatsMaster = DATA.subStats || [];
 
-    // Initialize UI
+    // Start UI
     populateAddCharacterDropdown();
     addCharacterBtn.addEventListener('click', handleAddCharacter);
     trackerFilter.addEventListener('change', renderTracker);
     renderAll();
   })
   .catch(err => console.error('Failed to load data.json:', err));
-
 
 // ======================================================
 // Utility / Persistence
@@ -52,6 +46,9 @@ function saveData() {
   localStorage.setItem('genshinTracker', JSON.stringify(characters));
 }
 
+// ======================================================
+// CUSTOM DROPDOWN
+// ======================================================
 function populateAddCharacterDropdown() {
   addCharacterDropdown.innerHTML = '';
 
@@ -62,32 +59,41 @@ function populateAddCharacterDropdown() {
 
   const optionsUl = document.createElement('ul');
   optionsUl.className = 'options';
+  optionsUl.style.display = 'none';
+  addCharacterDropdown.appendChild(optionsUl);
 
+  // Get names already added
   const existing = new Set(characters.map(c => c.name));
-  allCharactersMaster.forEach(name => {
-    if (!existing.has(name)) {
+
+  DATA.characters.forEach(charObj => {
+    if (!existing.has(charObj.name)) {
       const li = document.createElement('li');
-      li.dataset.value = name;
-      li.textContent = name;
-      // Uncomment if you add icons
+      li.dataset.value = charObj.name;
+
+      // Optional: add icon to left
       // const img = document.createElement('img');
-      // img.src = 'path/to/icon.png';
-      // li.prepend(img);
+      // img.src = charObj.icon;
+      // img.alt = charObj.name;
+      // img.className = 'dropdown-icon';
+      // li.appendChild(img);
+
+      li.appendChild(document.createTextNode(charObj.name));
+      
       li.addEventListener('click', () => {
-        selectedDiv.textContent = name;
+        selectedDiv.textContent = charObj.name;
         optionsUl.style.display = 'none';
       });
+
       optionsUl.appendChild(li);
     }
   });
 
-  addCharacterDropdown.appendChild(optionsUl);
-
+  // Toggle dropdown
   selectedDiv.addEventListener('click', () => {
     optionsUl.style.display = optionsUl.style.display === 'block' ? 'none' : 'block';
   });
 
-  // Close dropdown if clicked outside
+  // Close if clicked outside
   document.addEventListener('click', (e) => {
     if (!addCharacterDropdown.contains(e.target)) {
       optionsUl.style.display = 'none';
@@ -96,17 +102,9 @@ function populateAddCharacterDropdown() {
 }
 
 function getSelectedCharacter() {
-  const sel = addCharacterDropdown.querySelector('.selected');
-  return sel ? sel.textContent : '';
+  const selectedDiv = addCharacterDropdown.querySelector('.selected');
+  return selectedDiv ? selectedDiv.textContent : '';
 }
-
-function renderAll() {
-  populateAddCharacterDropdown();
-  renderCharacters();
-  updateTrackerFilter();
-  renderTracker();
-}
-
 
 // ======================================================
 // Add / Remove Character
@@ -136,10 +134,16 @@ function removeCharacterAt(index) {
   renderAll();
 }
 
+// ======================================================
+// Render Characters List (same as before)
+// ======================================================
+function renderAll() {
+  populateAddCharacterDropdown();
+  renderCharacters();
+  updateTrackerFilter();
+  renderTracker();
+}
 
-// ======================================================
-// Render Characters List
-// ======================================================
 function renderCharacters() {
   charactersContainer.innerHTML = '';
 
@@ -162,8 +166,7 @@ function renderCharacters() {
 
     card.appendChild(header);
 
-    // Sections
-    card.appendChild(buildSection(char, 'artifactSets', 'Artifact Set', artifactSetsMaster, 3));
+    card.appendChild(buildSection(char, 'artifactSets', 'Artifact Set', DATA.artifactSets.map(a => a.name), 3));
     card.appendChild(buildSection(char, 'circletStats', 'Circlet', mainStatsPools.circlet));
     card.appendChild(buildSection(char, 'gobletStats', 'Goblet', mainStatsPools.goblet));
     card.appendChild(buildSection(char, 'sandsStats', 'Sands', mainStatsPools.sands));
@@ -173,6 +176,9 @@ function renderCharacters() {
   });
 }
 
+// ======================================================
+// Sections / Selects (same as before)
+// ======================================================
 function buildSection(charObj, arrayKey, label, optionsMaster, maxLen = 10) {
   const container = document.createElement('div');
   container.className = 'section-block';
@@ -241,7 +247,6 @@ function createSelectBlock(charObj, arrayKey, optionsMaster, selectedValue, maxL
   block.appendChild(select);
   return block;
 }
-
 
 // ======================================================
 // Tracker
