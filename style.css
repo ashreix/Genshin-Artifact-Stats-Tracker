@@ -147,6 +147,7 @@ main {
 }
 
 .custom-dropdown .options {
+  /* hidden by default; JS can toggle the 'hidden' class */
   display: none;
   position: absolute;
   top: calc(100% + 2px);
@@ -164,7 +165,9 @@ main {
   list-style: none;
 }
 
-.custom-dropdown .options li {
+.custom-dropdown .options.hidden { display: none; }
+
+.custom-dropdown .options .option-item {
   padding: 6px;
   display: flex;
   align-items: center;
@@ -172,12 +175,25 @@ main {
   cursor: pointer;
 }
 
-.custom-dropdown .options li:hover {
-  background: #f0f0f0;
+.custom-dropdown .options .option-item:hover {
+  background: var(--accent);
+  color: #fff;
 }
 
-/* // Uncomment when icons are available
-.custom-dropdown .options li img {
+/* search input inside dropdown */
+.custom-dropdown .dropdown-filter {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 6px;
+  margin-bottom: 4px;
+  border: 1px solid var(--card-border);
+  border-radius: 6px;
+  outline: none;
+  background: #fff;
+}
+
+/* optional icon styles (commented for now)
+.custom-dropdown .options .option-item img {
   width: 24px;
   height: 24px;
 } */
