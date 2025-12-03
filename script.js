@@ -32,7 +32,7 @@ fetch('data.json')
     subStatsMaster = DATA.subStats || [];
 
     // Start UI
-    populateCharacterDropdown();
+    populateAddCharacterDropdown();
     addCharacterBtn.addEventListener('click', handleAddCharacter);
     trackerFilter.addEventListener('change', renderTracker);
     renderAll();
@@ -49,44 +49,62 @@ function saveData() {
 // ======================================================
 // CUSTOM DROPDOWN
 // ======================================================
-function populateCharacterDropdown() {
+function populateAddCharacterDropdown() {
   const container = document.getElementById('addCharacterDropdown');
   container.innerHTML = '';
 
+  // Selected div
   const selectedDiv = document.createElement('div');
   selectedDiv.className = 'selected';
   selectedDiv.textContent = '-- Select character --';
   container.appendChild(selectedDiv);
 
+  // Options container
   const listDiv = document.createElement('div');
   listDiv.className = 'options hidden';
 
-  // Input for filtering
+  // Search input
   const filterInput = document.createElement('input');
   filterInput.type = 'text';
   filterInput.placeholder = 'Type to search...';
   filterInput.className = 'dropdown-filter';
   listDiv.appendChild(filterInput);
 
+  // Populate options
   DATA.characters.forEach(char => {
     const item = document.createElement('div');
     item.className = 'option-item';
-    item.textContent = char.name;
-    // item.style.backgroundImage = `url(${char.icon})`; // uncomment when ready
+
+    // Optional icon (commented for now)
+    // const img = document.createElement('img');
+    // img.src = char.icon;
+    // img.alt = char.name;
+    // img.width = 24;
+    // img.height = 24;
+    // item.appendChild(img);
+
+    const span = document.createElement('span');
+    span.textContent = char.name;
+    item.appendChild(span);
+
     item.addEventListener('click', () => {
       selectedDiv.textContent = char.name;
       listDiv.classList.add('hidden');
     });
+
     listDiv.appendChild(item);
   });
 
   container.appendChild(listDiv);
 
-  selectedDiv.addEventListener('click', () => {
+  // Toggle dropdown on click
+  selectedDiv.addEventListener('click', e => {
+    e.stopPropagation(); // Prevent immediate document click hiding
     listDiv.classList.toggle('hidden');
     filterInput.focus();
   });
 
+  // Filter options as user types
   filterInput.addEventListener('input', () => {
     const filter = filterInput.value.toLowerCase();
     listDiv.querySelectorAll('.option-item').forEach(item => {
@@ -94,7 +112,7 @@ function populateCharacterDropdown() {
     });
   });
 
-  // Optional: click outside closes
+  // Close dropdown when clicking outside
   document.addEventListener('click', e => {
     if (!container.contains(e.target)) listDiv.classList.add('hidden');
   });
