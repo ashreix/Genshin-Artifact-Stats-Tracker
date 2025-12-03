@@ -70,24 +70,15 @@ function populateAddCharacterDropdown() {
   filterInput.className = 'dropdown-filter';
   listDiv.appendChild(filterInput);
 
-  // Populate options
+  // Add characters
   DATA.characters.forEach(char => {
     const item = document.createElement('div');
     item.className = 'option-item';
+    item.textContent = char.name;
 
-    // Optional icon (commented for now)
-    // const img = document.createElement('img');
-    // img.src = char.icon;
-    // img.alt = char.name;
-    // img.width = 24;
-    // img.height = 24;
-    // item.appendChild(img);
-
-    const span = document.createElement('span');
-    span.textContent = char.name;
-    item.appendChild(span);
-
-    item.addEventListener('click', () => {
+    // When clicked, select character
+    item.addEventListener('click', e => {
+      e.stopPropagation(); // prevent document click from closing again
       selectedDiv.textContent = char.name;
       listDiv.classList.add('hidden');
     });
@@ -97,18 +88,18 @@ function populateAddCharacterDropdown() {
 
   container.appendChild(listDiv);
 
-  // Toggle dropdown on click
+  // Toggle dropdown
   selectedDiv.addEventListener('click', e => {
-    e.stopPropagation(); // Prevent immediate document click hiding
+    e.stopPropagation(); // prevent document click from firing immediately
     listDiv.classList.toggle('hidden');
     filterInput.focus();
   });
 
-  // Filter options as user types
+  // Filter as you type
   filterInput.addEventListener('input', () => {
     const filter = filterInput.value.toLowerCase();
     listDiv.querySelectorAll('.option-item').forEach(item => {
-      item.style.display = item.textContent.toLowerCase().includes(filter) ? '' : 'none';
+      item.style.display = item.textContent.toLowerCase().includes(filter) ? 'flex' : 'none';
     });
   });
 
