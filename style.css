@@ -6,6 +6,7 @@
   --gap: 10px;
 }
 
+/* Page layout */
 body {
   font-family: Arial, Helvetica, sans-serif;
   background: #f6f8fa;
@@ -41,30 +42,27 @@ button {
   background: white;
   cursor: pointer;
 }
+button:active { transform: translateY(1px); }
 
-button:active {
-  transform: translateY(1px);
-}
-
-/* Main layout */
+/* Layout main */
 main {
   display: grid;
   grid-template-columns: 1fr 360px;
   gap: 24px;
 }
 
-/* Characters column */
+/* Characters column card */
 .character-card {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
   border-radius: 8px;
   padding: 12px;
   margin-bottom: 12px;
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
+  box-shadow: 0 1px 0 rgba(0,0,0,0.02);
 }
 
 .character-header {
-  display: flex;
+  display:flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
@@ -91,7 +89,7 @@ main {
 }
 
 .section-label {
-  display: block;
+  display:block;
   font-weight: 600;
   margin-bottom: 6px;
   color: var(--muted);
@@ -112,7 +110,7 @@ main {
 
 /* Each select block */
 .select-block {
-  display: flex;
+  display:flex;
   flex-direction: column;
 }
 
@@ -126,79 +124,73 @@ main {
   box-sizing: border-box;
 }
 
-/* ===================== */
-/* CUSTOM DROPDOWN STYLE */
-/* ===================== */
-.custom-dropdown {
+/* ----------------------------- */
+/* CHARACTER AUTOCOMPLETE (input) */
+/* ----------------------------- */
+.add-character-wrapper {
   position: relative;
-  min-width: 200px;
-  width: 200px;
-  border: 1px solid var(--card-border);
-  border-radius: 6px;
-  background: #fff;
-  cursor: pointer;
-  user-select: none;
+  width: 240px;
   box-sizing: border-box;
 }
 
-.custom-dropdown .selected {
-  padding: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.character-search-input {
+  width: 100%;
+  padding: 8px 10px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid var(--card-border);
+  background: #fff;
+  box-sizing: border-box;
 }
 
-.custom-dropdown .options {
-  display: none; /* hidden by default */
+.character-search-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(0,123,255,0.06);
+}
+
+.character-search-dropdown {
   position: absolute;
-  top: calc(100% + 2px);
+  top: calc(100% + 8px);
   left: 0;
   width: 100%;
-  max-height: 200px;
+  max-height: 260px;
   overflow-y: auto;
-  border: 1px solid var(--card-border);
-  border-radius: 6px;
-  background: #fff;
-  z-index: 10;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  padding: 0;
   margin: 0;
+  padding: 4px 0;
   list-style: none;
+  background: white;
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(21, 29, 41, 0.08);
+  z-index: 500;
+  box-sizing: border-box;
 }
 
-.custom-dropdown .options.show {
-  display: block; /* toggle this class in JS */
+.character-search-dropdown.hidden {
+  display: none;
 }
 
-.custom-dropdown .options .option-item {
-  padding: 6px;
+.character-search-dropdown li {
+  padding: 8px 10px;
+  cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 6px;
-  cursor: pointer;
+  gap: 8px;
+  font-size: 14px;
 }
 
-.custom-dropdown .options .option-item:hover {
+.character-search-dropdown li:hover {
   background: var(--accent);
   color: #fff;
 }
 
-/* search input inside dropdown */
-.custom-dropdown .dropdown-filter {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 6px;
-  margin-bottom: 4px;
-  border: 1px solid var(--card-border);
+/* Optional icon style (commented for now)
+.character-search-dropdown li img {
+  width: 28px;
+  height: 28px;
   border-radius: 6px;
-  outline: none;
-  background: #fff;
-}
-
-/* optional icon styles (commented for now)
-.custom-dropdown .options .option-item img {
-  width: 24px;
-  height: 24px;
+  object-fit: cover;
 } */
 
 /* Tracker column */
@@ -211,10 +203,10 @@ main {
 }
 
 .tracker-controls {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  margin-bottom: 8px;
+  display:flex;
+  gap:8px;
+  align-items:center;
+  margin-bottom:8px;
 }
 
 .tracker-item {
@@ -222,31 +214,17 @@ main {
   border-bottom: 1px dashed #eee;
 }
 
-.tracker-item:last-child {
-  border-bottom: none;
-}
+.tracker-item:last-child { border-bottom: none; }
 
 .tracker-character-name {
   font-weight: 700;
   margin-bottom: 6px;
 }
+.small-muted { color: var(--muted); font-size: 0.95rem; }
 
-.small-muted {
-  color: var(--muted);
-  font-size: 0.95rem;
-}
-
-/* Responsive adjustments */
-@media (max-width: 720px) {
-  main {
-    grid-template-columns: 1fr;
-  }
-  .select-block select {
-    width: 100%;
-    min-width: 0;
-  }
-  .custom-dropdown {
-    width: 100%;
-    min-width: 0;
-  }
+/* Responsive */
+@media (max-width: 720px){
+  main { grid-template-columns: 1fr; }
+  .select-block select { width: 100%; min-width: 0; }
+  .add-character-wrapper { width: 100%; }
 }
