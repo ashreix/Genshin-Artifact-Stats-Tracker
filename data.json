@@ -1,173 +1,173 @@
 {
   "characters": [
-	{"name": "Aino", "icon": "icons/aino.png"}
-	{"name": "Albedo", "icon": "icons/albedo.png"}
-	{"name": "Alhaitham", "icon": "icons/alhaitham.png"}
-	{"name": "Aloy", "icon": "icons/aloy.png"}
-	{"name": "Amber", "icon": "icons/amber.png"}
-	{"name": "Arataki Itto", "icon": "icons/arataki_itto.png"}
-	{"name": "Arlecchino", "icon": "icons/arlecchino.png"}
-	{"name": "Baizhu", "icon": "icons/baizhu.png"}
-	{"name": "Barbara", "icon": "icons/barbara.png"}
-	{"name": "Beidou", "icon": "icons/beidou.png"}
-	{"name": "Bennett", "icon": "icons/bennett.png"}
-	{"name": "Candace", "icon": "icons/candace.png"}
-	{"name": "Charlotte", "icon": "icons/charlotte.png"}
-	{"name": "Chasca", "icon": "icons/chasca.png"}
-	{"name": "Chevreuse", "icon": "icons/chevreuse.png"}
-	{"name": "Chiori", "icon": "icons/chiori.png"}
-	{"name": "Chongyun", "icon": "icons/chongyun.png"}
-	{"name": "Citlali", "icon": "icons/citlali.png"}
-	{"name": "Clorinde", "icon": "icons/clorinde.png"}
-	{"name": "Collei", "icon": "icons/collei.png"}
-	{"name": "Cyno", "icon": "icons/cyno.png"}
-	{"name": "Dahlia", "icon": "icons/dahlia.png"}
-	{"name": "Dehya", "icon": "icons/dehya.png"}
-	{"name": "Diluc", "icon": "icons/diluc.png"}
-	{"name": "Diona", "icon": "icons/diona.png"}
-	{"name": "Dori", "icon": "icons/dori.png"}
-	{"name": "Durin", "icon": "icons/durin.png"}
-	{"name": "Emilie", "icon": "icons/emilie.png"}
-	{"name": "Escoffier", "icon": "icons/escoffier.png"}
-	{"name": "Eula", "icon": "icons/eula.png"}
-	{"name": "Faruzan", "icon": "icons/faruzan.png"}
-	{"name": "Fischl", "icon": "icons/fischl.png"}
-	{"name": "Flins", "icon": "icons/flins.png"}
-	{"name": "Freminet", "icon": "icons/freminet.png"}
-	{"name": "Furina", "icon": "icons/furina.png"}
-	{"name": "Gaming", "icon": "icons/gaming.png"}
-	{"name": "Ganyu", "icon": "icons/ganyu.png"}
-	{"name": "Gorou", "icon": "icons/gorou.png"}
-	{"name": "Hu Tao", "icon": "icons/hu_tao.png"}
-	{"name": "Iansan", "icon": "icons/iansan.png"}
-	{"name": "Ifa", "icon": "icons/ifa.png"}
-	{"name": "Ineffa", "icon": "icons/ineffa.png"}
-	{"name": "Jahoda", "icon": "icons/jahoda.png"}
-	{"name": "Jean", "icon": "icons/jean.png"}
-	{"name": "Kachina", "icon": "icons/kachina.png"}
-	{"name": "Kaedehara Kazuha", "icon": "icons/kaedehara_kazuha.png"}
-	{"name": "Kaeya", "icon": "icons/kaeya.png"}
-	{"name": "Kamisato Ayaka", "icon": "icons/kamisato_ayaka.png"}
-	{"name": "Kamisato Ayato", "icon": "icons/kamisato_ayato.png"}
-	{"name": "Kaveh", "icon": "icons/kaveh.png"}
-	{"name": "Keqing", "icon": "icons/keqing.png"}
-	{"name": "Kinich", "icon": "icons/kinich.png"}
-	{"name": "Kirara", "icon": "icons/kirara.png"}
-	{"name": "Klee", "icon": "icons/klee.png"}
-	{"name": "Kujou Sara", "icon": "icons/kujou_sara.png"}
-	{"name": "Kuki Shinobu", "icon": "icons/kuki_shinobu.png"}
-	{"name": "Lan Yan", "icon": "icons/lan_yan.png"}
-	{"name": "Lauma", "icon": "icons/lauma.png"}
-	{"name": "Layla", "icon": "icons/layla.png"}
-	{"name": "Lisa", "icon": "icons/lisa.png"}
-	{"name": "Lynette", "icon": "icons/lynette.png"}
-	{"name": "Lyney", "icon": "icons/lyney.png"}
-	{"name": "Mavuika", "icon": "icons/mavuika.png"}
-	{"name": "Mika", "icon": "icons/mika.png"}
-	{"name": "Mona", "icon": "icons/mona.png"}
-	{"name": "Mualani", "icon": "icons/mualani.png"}
-	{"name": "Nahida", "icon": "icons/nahida.png"}
-	{"name": "Navia", "icon": "icons/navia.png"}
-	{"name": "Nefer", "icon": "icons/nefer.png"}
-	{"name": "Neuvillette", "icon": "icons/neuvillette.png"}
-	{"name": "Nilou", "icon": "icons/nilou.png"}
-	{"name": "Ningguang", "icon": "icons/ningguang.png"}
-	{"name": "Noelle", "icon": "icons/noelle.png"}
-	{"name": "Ororon", "icon": "icons/ororon.png"}
-	{"name": "Qiqi", "icon": "icons/qiqi.png"}
-	{"name": "Raiden Shogun", "icon": "icons/raiden_shogun.png"}
-	{"name": "Razor", "icon": "icons/razor.png"}
-	{"name": "Rosaria", "icon": "icons/rosaria.png"}
-	{"name": "Sangonomiya Kokomi", "icon": "icons/sangonomiya_kokomi.png"}
-	{"name": "Sayu", "icon": "icons/sayu.png"}
-	{"name": "Sethos", "icon": "icons/sethos.png"}
-	{"name": "Shenhe", "icon": "icons/shenhe.png"}
-	{"name": "Shikanoin Heizou", "icon": "icons/shikanoin_heizou.png"}
-	{"name": "Sigewinne", "icon": "icons/sigewinne.png"}
-	{"name": "Skirk", "icon": "icons/skirk.png"}
-	{"name": "Sucrose", "icon": "icons/sucrose.png"}
-	{"name": "Tartaglia", "icon": "icons/tartaglia.png"}
-	{"name": "Thoma", "icon": "icons/thoma.png"}
-	{"name": "Tighnari", "icon": "icons/tighnari.png"}
-	{"name": "Traveler", "icon": "icons/traveler.png"}
-	{"name": "Varesa", "icon": "icons/varesa.png"}
-	{"name": "Venti", "icon": "icons/venti.png"}
-	{"name": "Wanderer", "icon": "icons/wanderer.png"}
-	{"name": "Wonderland Manekin", "icon": "icons/wonderland_manekin.png"}
-	{"name": "Wriothesley", "icon": "icons/wriothesley.png"}
-	{"name": "Xiangling", "icon": "icons/xiangling.png"}
-	{"name": "Xianyun", "icon": "icons/xianyun.png"}
-	{"name": "Xiao", "icon": "icons/xiao.png"}
-	{"name": "Xilonen", "icon": "icons/xilonen.png"}
-	{"name": "Xingqiu", "icon": "icons/xingqiu.png"}
-	{"name": "Xinyan", "icon": "icons/xinyan.png"}
-	{"name": "Yae Miko", "icon": "icons/yae_miko.png"}
-	{"name": "Yanfei", "icon": "icons/yanfei.png"}
-	{"name": "Yaoyao", "icon": "icons/yaoyao.png"}
-	{"name": "Yelan", "icon": "icons/yelan.png"}
-	{"name": "Yoimiya", "icon": "icons/yoimiya.png"}
-	{"name": "Yumemizuki Mizuki", "icon": "icons/yumemizuki_mizuki.png"}
-	{"name": "Yun Jin", "icon": "icons/yun_jin.png"}
+	{"name": "Aino", "icon": "icons/aino.png"},
+	{"name": "Albedo", "icon": "icons/albedo.png"},
+	{"name": "Alhaitham", "icon": "icons/alhaitham.png"},
+	{"name": "Aloy", "icon": "icons/aloy.png"},
+	{"name": "Amber", "icon": "icons/amber.png"},
+	{"name": "Arataki Itto", "icon": "icons/arataki_itto.png"},
+	{"name": "Arlecchino", "icon": "icons/arlecchino.png"},
+	{"name": "Baizhu", "icon": "icons/baizhu.png"},
+	{"name": "Barbara", "icon": "icons/barbara.png"},
+	{"name": "Beidou", "icon": "icons/beidou.png"},
+	{"name": "Bennett", "icon": "icons/bennett.png"},
+	{"name": "Candace", "icon": "icons/candace.png"},
+	{"name": "Charlotte", "icon": "icons/charlotte.png"},
+	{"name": "Chasca", "icon": "icons/chasca.png"},
+	{"name": "Chevreuse", "icon": "icons/chevreuse.png"},
+	{"name": "Chiori", "icon": "icons/chiori.png"},
+	{"name": "Chongyun", "icon": "icons/chongyun.png"},
+	{"name": "Citlali", "icon": "icons/citlali.png"},
+	{"name": "Clorinde", "icon": "icons/clorinde.png"},
+	{"name": "Collei", "icon": "icons/collei.png"},
+	{"name": "Cyno", "icon": "icons/cyno.png"},
+	{"name": "Dahlia", "icon": "icons/dahlia.png"},
+	{"name": "Dehya", "icon": "icons/dehya.png"},
+	{"name": "Diluc", "icon": "icons/diluc.png"},
+	{"name": "Diona", "icon": "icons/diona.png"},
+	{"name": "Dori", "icon": "icons/dori.png"},
+	{"name": "Durin", "icon": "icons/durin.png"},
+	{"name": "Emilie", "icon": "icons/emilie.png"},
+	{"name": "Escoffier", "icon": "icons/escoffier.png"},
+	{"name": "Eula", "icon": "icons/eula.png"},
+	{"name": "Faruzan", "icon": "icons/faruzan.png"},
+	{"name": "Fischl", "icon": "icons/fischl.png"},
+	{"name": "Flins", "icon": "icons/flins.png"},
+	{"name": "Freminet", "icon": "icons/freminet.png"},
+	{"name": "Furina", "icon": "icons/furina.png"},
+	{"name": "Gaming", "icon": "icons/gaming.png"},
+	{"name": "Ganyu", "icon": "icons/ganyu.png"},
+	{"name": "Gorou", "icon": "icons/gorou.png"},
+	{"name": "Hu Tao", "icon": "icons/hu_tao.png"},
+	{"name": "Iansan", "icon": "icons/iansan.png"},
+	{"name": "Ifa", "icon": "icons/ifa.png"},
+	{"name": "Ineffa", "icon": "icons/ineffa.png"},
+	{"name": "Jahoda", "icon": "icons/jahoda.png"},
+	{"name": "Jean", "icon": "icons/jean.png"},
+	{"name": "Kachina", "icon": "icons/kachina.png"},
+	{"name": "Kaedehara Kazuha", "icon": "icons/kaedehara_kazuha.png"},
+	{"name": "Kaeya", "icon": "icons/kaeya.png"},
+	{"name": "Kamisato Ayaka", "icon": "icons/kamisato_ayaka.png"},
+	{"name": "Kamisato Ayato", "icon": "icons/kamisato_ayato.png"},
+	{"name": "Kaveh", "icon": "icons/kaveh.png"},
+	{"name": "Keqing", "icon": "icons/keqing.png"},
+	{"name": "Kinich", "icon": "icons/kinich.png"},
+	{"name": "Kirara", "icon": "icons/kirara.png"},
+	{"name": "Klee", "icon": "icons/klee.png"},
+	{"name": "Kujou Sara", "icon": "icons/kujou_sara.png"},
+	{"name": "Kuki Shinobu", "icon": "icons/kuki_shinobu.png"},
+	{"name": "Lan Yan", "icon": "icons/lan_yan.png"},
+	{"name": "Lauma", "icon": "icons/lauma.png"},
+	{"name": "Layla", "icon": "icons/layla.png"},
+	{"name": "Lisa", "icon": "icons/lisa.png"},
+	{"name": "Lynette", "icon": "icons/lynette.png"},
+	{"name": "Lyney", "icon": "icons/lyney.png"},
+	{"name": "Mavuika", "icon": "icons/mavuika.png"},
+	{"name": "Mika", "icon": "icons/mika.png"},
+	{"name": "Mona", "icon": "icons/mona.png"},
+	{"name": "Mualani", "icon": "icons/mualani.png"},
+	{"name": "Nahida", "icon": "icons/nahida.png"},
+	{"name": "Navia", "icon": "icons/navia.png"},
+	{"name": "Nefer", "icon": "icons/nefer.png"},
+	{"name": "Neuvillette", "icon": "icons/neuvillette.png"},
+	{"name": "Nilou", "icon": "icons/nilou.png"},
+	{"name": "Ningguang", "icon": "icons/ningguang.png"},
+	{"name": "Noelle", "icon": "icons/noelle.png"},
+	{"name": "Ororon", "icon": "icons/ororon.png"},
+	{"name": "Qiqi", "icon": "icons/qiqi.png"},
+	{"name": "Raiden Shogun", "icon": "icons/raiden_shogun.png"},
+	{"name": "Razor", "icon": "icons/razor.png"},
+	{"name": "Rosaria", "icon": "icons/rosaria.png"},
+	{"name": "Sangonomiya Kokomi", "icon": "icons/sangonomiya_kokomi.png"},
+	{"name": "Sayu", "icon": "icons/sayu.png"},
+	{"name": "Sethos", "icon": "icons/sethos.png"},
+	{"name": "Shenhe", "icon": "icons/shenhe.png"},
+	{"name": "Shikanoin Heizou", "icon": "icons/shikanoin_heizou.png"},
+	{"name": "Sigewinne", "icon": "icons/sigewinne.png"},
+	{"name": "Skirk", "icon": "icons/skirk.png"},
+	{"name": "Sucrose", "icon": "icons/sucrose.png"},
+	{"name": "Tartaglia", "icon": "icons/tartaglia.png"},
+	{"name": "Thoma", "icon": "icons/thoma.png"},
+	{"name": "Tighnari", "icon": "icons/tighnari.png"},
+	{"name": "Traveler", "icon": "icons/traveler.png"},
+	{"name": "Varesa", "icon": "icons/varesa.png"},
+	{"name": "Venti", "icon": "icons/venti.png"},
+	{"name": "Wanderer", "icon": "icons/wanderer.png"},
+	{"name": "Wonderland Manekin", "icon": "icons/wonderland_manekin.png"},
+	{"name": "Wriothesley", "icon": "icons/wriothesley.png"},
+	{"name": "Xiangling", "icon": "icons/xiangling.png"},
+	{"name": "Xianyun", "icon": "icons/xianyun.png"},
+	{"name": "Xiao", "icon": "icons/xiao.png"},
+	{"name": "Xilonen", "icon": "icons/xilonen.png"},
+	{"name": "Xingqiu", "icon": "icons/xingqiu.png"},
+	{"name": "Xinyan", "icon": "icons/xinyan.png"},
+	{"name": "Yae Miko", "icon": "icons/yae_miko.png"},
+	{"name": "Yanfei", "icon": "icons/yanfei.png"},
+	{"name": "Yaoyao", "icon": "icons/yaoyao.png"},
+	{"name": "Yelan", "icon": "icons/yelan.png"},
+	{"name": "Yoimiya", "icon": "icons/yoimiya.png"},
+	{"name": "Yumemizuki Mizuki", "icon": "icons/yumemizuki_mizuki.png"},
+	{"name": "Yun Jin", "icon": "icons/yun_jin.png"},
 	{"name": "Zhongli", "icon": "icons/zhongli.png"}
   ],
   "artifactSets": [
-	{"name": "Initiate", "icon": "icons/initiate.png"}
-	{"name": "Adventurer", "icon": "icons/adventurer.png"}
-	{"name": "Lucky Dog", "icon": "icons/lucky_dog.png"}
-	{"name": "Traveling Doctor", "icon": "icons/traveling_doctor.png"}
-	{"name": "Resolution of Sojourner", "icon": "icons/resolution_of_sojourner.png"}
-	{"name": "Tiny Miracle", "icon": "icons/tiny_miracle.png"}
-	{"name": "Berserker", "icon": "icons/berserker.png"}
-	{"name": "Instructor", "icon": "icons/instructor.png"}
-	{"name": "The Exile", "icon": "icons/the_exile.png"}
-	{"name": "Defender's Will", "icon": "icons/defenders_will.png"}
-	{"name": "Brave Heart", "icon": "icons/brave_heart.png"}
-	{"name": "Martial Artist", "icon": "icons/martial_artist.png"}
-	{"name": "Gambler", "icon": "icons/gambler.png"}
-	{"name": "Scholar", "icon": "icons/scholar.png"}
-	{"name": "Prayers for Wisdom", "icon": "icons/prayers_for_wisdom.png"}
-	{"name": "Prayers for Destiny", "icon": "icons/prayers_for_destiny.png"}
-	{"name": "Prayers for Illumination", "icon": "icons/prayers_for_illumination.png"}
-	{"name": "Prayers to Springtime", "icon": "icons/prayers_to_springtime.png"}
-	{"name": "Gladiator's Finale", "icon": "icons/gladiators_finale.png"}
-	{"name": "Wanderer's Troupe", "icon": "icons/wanderers_troupe.png"}
-	{"name": "Noblesse Oblige", "icon": "icons/noblesse_oblige.png"}
-	{"name": "Bloodstained Chivalry", "icon": "icons/bloodstained_chivalry.png"}
-	{"name": "Maiden Beloved", "icon": "icons/maiden_beloved.png"}
-	{"name": "Viridescent Venerer", "icon": "icons/viridescent_venerer.png"}
-	{"name": "Archaic Petra", "icon": "icons/archaic_petra.png"}
-	{"name": "Retracing Bolide", "icon": "icons/retracing_bolide.png"}
-	{"name": "Thundersoother", "icon": "icons/thundersoother.png"}
-	{"name": "Thundering Fury", "icon": "icons/thundering_fury.png"}
-	{"name": "Lavawalker", "icon": "icons/lavawalker.png"}
-	{"name": "Crimson Witch of Flames", "icon": "icons/crimson_witch_of_flames.png"}
-	{"name": "Blizzard Strayer", "icon": "icons/blizzard_strayer.png"}
-	{"name": "Heart of Depth", "icon": "icons/heart_of_depth.png"}
-	{"name": "Tenacity of the Millelith", "icon": "icons/tenacity_of_the_millelith.png"}
-	{"name": "Pale Flame", "icon": "icons/pale_flame.png"}
-	{"name": "Shimenawa's Reminiscence", "icon": "icons/shimenawas_reminiscence.png"}
-	{"name": "Emblem of Severed Fate", "icon": "icons/emblem_of_severed_fate.png"}
-	{"name": "Husk of Opulent Dreams", "icon": "icons/husk_of_opulent_dreams.png"}
-	{"name": "Ocean-Hued Clam", "icon": "icons/ocean-hued_clam.png"}
-	{"name": "Vermillion Hereafter", "icon": "icons/vermillion_hereafter.png"}
-	{"name": "Echoes of an Offering", "icon": "icons/echoes_of_an_offering.png"}
-	{"name": "Deepwood Memories", "icon": "icons/deepwood_memories.png"}
-	{"name": "Gilded Dreams", "icon": "icons/gilded_dreams.png"}
-	{"name": "Desert Pavilion Chronicle", "icon": "icons/desert_pavilion_chronicle.png"}
-	{"name": "Flower of Paradise Lost", "icon": "icons/flower_of_paradise_lost.png"}
-	{"name": "Nymph's Dream", "icon": "icons/nymphs_dream.png"}
-	{"name": "Vourukasha's Glow", "icon": "icons/vourukashas_glow.png"}
-	{"name": "Marechaussee Hunter", "icon": "icons/marechaussee_hunter.png"}
-	{"name": "Golden Troupe", "icon": "icons/golden_troupe.png"}
-	{"name": "Song of Days Past", "icon": "icons/song_of_days_past.png"}
-	{"name": "Nighttime Whispers in the Echoing Woods", "icon": "icons/nighttime_whispers_in_the_echoing_woods.png"}
-	{"name": "Fragment of Harmonic Whimsy", "icon": "icons/fragment_of_harmonic_whimsy.png"}
-	{"name": "Unfinished Reverie", "icon": "icons/unfinished_reverie.png"}
-	{"name": "Scroll of the Hero of Cinder City", "icon": "icons/scroll_of_the_hero_of_cinder_city.png"}
-	{"name": "Obsidian Codex", "icon": "icons/obsidian_codex.png"}
-	{"name": "Finale of the Deep Galleries", "icon": "icons/finale_of_the_deep_galleries.png"}
-	{"name": "Long Night's Oath", "icon": "icons/long_nights_oath.png"}
-	{"name": "Night of the Sky's Unveiling", "icon": "icons/night_of_the_skys_unveiling.png"}
+	{"name": "Initiate", "icon": "icons/initiate.png"},
+	{"name": "Adventurer", "icon": "icons/adventurer.png"},
+	{"name": "Lucky Dog", "icon": "icons/lucky_dog.png"},
+	{"name": "Traveling Doctor", "icon": "icons/traveling_doctor.png"},
+	{"name": "Resolution of Sojourner", "icon": "icons/resolution_of_sojourner.png"},
+	{"name": "Tiny Miracle", "icon": "icons/tiny_miracle.png"},
+	{"name": "Berserker", "icon": "icons/berserker.png"},
+	{"name": "Instructor", "icon": "icons/instructor.png"},
+	{"name": "The Exile", "icon": "icons/the_exile.png"},
+	{"name": "Defender's Will", "icon": "icons/defenders_will.png"},
+	{"name": "Brave Heart", "icon": "icons/brave_heart.png"},
+	{"name": "Martial Artist", "icon": "icons/martial_artist.png"},
+	{"name": "Gambler", "icon": "icons/gambler.png"},
+	{"name": "Scholar", "icon": "icons/scholar.png"},
+	{"name": "Prayers for Wisdom", "icon": "icons/prayers_for_wisdom.png"},
+	{"name": "Prayers for Destiny", "icon": "icons/prayers_for_destiny.png"},
+	{"name": "Prayers for Illumination", "icon": "icons/prayers_for_illumination.png"},
+	{"name": "Prayers to Springtime", "icon": "icons/prayers_to_springtime.png"},
+	{"name": "Gladiator's Finale", "icon": "icons/gladiators_finale.png"},
+	{"name": "Wanderer's Troupe", "icon": "icons/wanderers_troupe.png"},
+	{"name": "Noblesse Oblige", "icon": "icons/noblesse_oblige.png"},
+	{"name": "Bloodstained Chivalry", "icon": "icons/bloodstained_chivalry.png"},
+	{"name": "Maiden Beloved", "icon": "icons/maiden_beloved.png"},
+	{"name": "Viridescent Venerer", "icon": "icons/viridescent_venerer.png"},
+	{"name": "Archaic Petra", "icon": "icons/archaic_petra.png"},
+	{"name": "Retracing Bolide", "icon": "icons/retracing_bolide.png"},
+	{"name": "Thundersoother", "icon": "icons/thundersoother.png"},
+	{"name": "Thundering Fury", "icon": "icons/thundering_fury.png"},
+	{"name": "Lavawalker", "icon": "icons/lavawalker.png"},
+	{"name": "Crimson Witch of Flames", "icon": "icons/crimson_witch_of_flames.png"},
+	{"name": "Blizzard Strayer", "icon": "icons/blizzard_strayer.png"},
+	{"name": "Heart of Depth", "icon": "icons/heart_of_depth.png"},
+	{"name": "Tenacity of the Millelith", "icon": "icons/tenacity_of_the_millelith.png"},
+	{"name": "Pale Flame", "icon": "icons/pale_flame.png"},
+	{"name": "Shimenawa's Reminiscence", "icon": "icons/shimenawas_reminiscence.png"},
+	{"name": "Emblem of Severed Fate", "icon": "icons/emblem_of_severed_fate.png"},
+	{"name": "Husk of Opulent Dreams", "icon": "icons/husk_of_opulent_dreams.png"},
+	{"name": "Ocean-Hued Clam", "icon": "icons/ocean-hued_clam.png"},
+	{"name": "Vermillion Hereafter", "icon": "icons/vermillion_hereafter.png"},
+	{"name": "Echoes of an Offering", "icon": "icons/echoes_of_an_offering.png"},
+	{"name": "Deepwood Memories", "icon": "icons/deepwood_memories.png"},
+	{"name": "Gilded Dreams", "icon": "icons/gilded_dreams.png"},
+	{"name": "Desert Pavilion Chronicle", "icon": "icons/desert_pavilion_chronicle.png"},
+	{"name": "Flower of Paradise Lost", "icon": "icons/flower_of_paradise_lost.png"},
+	{"name": "Nymph's Dream", "icon": "icons/nymphs_dream.png"},
+	{"name": "Vourukasha's Glow", "icon": "icons/vourukashas_glow.png"},
+	{"name": "Marechaussee Hunter", "icon": "icons/marechaussee_hunter.png"},
+	{"name": "Golden Troupe", "icon": "icons/golden_troupe.png"},
+	{"name": "Song of Days Past", "icon": "icons/song_of_days_past.png"},
+	{"name": "Nighttime Whispers in the Echoing Woods", "icon": "icons/nighttime_whispers_in_the_echoing_woods.png"},
+	{"name": "Fragment of Harmonic Whimsy", "icon": "icons/fragment_of_harmonic_whimsy.png"},
+	{"name": "Unfinished Reverie", "icon": "icons/unfinished_reverie.png"},
+	{"name": "Scroll of the Hero of Cinder City", "icon": "icons/scroll_of_the_hero_of_cinder_city.png"},
+	{"name": "Obsidian Codex", "icon": "icons/obsidian_codex.png"},
+	{"name": "Finale of the Deep Galleries", "icon": "icons/finale_of_the_deep_galleries.png"},
+	{"name": "Long Night's Oath", "icon": "icons/long_nights_oath.png"},
+	{"name": "Night of the Sky's Unveiling", "icon": "icons/night_of_the_skys_unveiling.png"},
 	{"name": "Silken Moon's Serenade", "icon": "icons/silken_moons_serenade.png"}
   ],
   "mainStats": {
