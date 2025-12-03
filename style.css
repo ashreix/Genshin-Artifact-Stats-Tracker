@@ -33,6 +33,7 @@ header {
   align-items: center;
 }
 
+/* Buttons */
 button {
   padding: 6px 10px;
   border-radius: 6px;
@@ -43,6 +44,7 @@ button {
 
 button:active { transform: translateY(1px); }
 
+/* Main layout */
 main {
   display: grid;
   grid-template-columns: 1fr 360px;
@@ -81,7 +83,7 @@ main {
   cursor: pointer;
 }
 
-/* Section row (label on top line, selects below, wrap after 3) */
+/* Section row (label + selects) */
 .section-block {
   margin: 8px 0;
 }
@@ -93,7 +95,6 @@ main {
   color: var(--muted);
 }
 
-/* container for selects */
 .selects-row {
   display: flex;
   flex-wrap: wrap;
@@ -101,7 +102,6 @@ main {
   align-items: flex-start;
 }
 
-/* make label occupy full width above selects */
 .selects-row::before {
   content: "";
   flex-basis: 100%;
@@ -114,8 +114,6 @@ main {
   flex-direction: column;
 }
 
-/* Controls sizing so 3 fit in a row, 4th wraps under first */
-/* Adjust widths so three selects fit comfortably */
 .select-block select {
   min-width: 170px;
   width: 170px;
@@ -126,21 +124,63 @@ main {
   box-sizing: border-box;
 }
 
-.add-character-select {
+/* ===================== */
+/* CUSTOM DROPDOWN STYLE */
+/* ===================== */
+.custom-dropdown {
+  position: relative;
   min-width: 200px;
   width: 200px;
-  padding: 6px;
-  border-radius: 6px;
   border: 1px solid var(--card-border);
+  border-radius: 6px;
   background: #fff;
+  cursor: pointer;
+  user-select: none;
   box-sizing: border-box;
 }
 
-/* For very small screens, allow selects to shrink */
-@media (max-width: 720px){
-  main { grid-template-columns: 1fr; }
-  .select-block select { width: 100%; min-width: 0; }
+.custom-dropdown .selected {
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
+
+.custom-dropdown .options {
+  display: none;
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 0;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid var(--card-border);
+  border-radius: 6px;
+  background: #fff;
+  z-index: 10;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.custom-dropdown .options li {
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.custom-dropdown .options li:hover {
+  background: #f0f0f0;
+}
+
+/* // Uncomment when icons are available
+.custom-dropdown .options li img {
+  width: 24px;
+  height: 24px;
+} */
 
 /* Tracker column */
 .tracker-section {
@@ -169,4 +209,15 @@ main {
   font-weight: 700;
   margin-bottom: 6px;
 }
-.small-muted { color: var(--muted); font-size: 0.95rem; }
+
+.small-muted { 
+  color: var(--muted); 
+  font-size: 0.95rem; 
+}
+
+/* Responsive adjustments */
+@media (max-width: 720px){
+  main { grid-template-columns: 1fr; }
+  .select-block select { width: 100%; min-width: 0; }
+  .custom-dropdown { width: 100%; min-width: 0; }
+}

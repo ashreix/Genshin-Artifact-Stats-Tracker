@@ -5,14 +5,14 @@ let DATA = null;   // will hold everything from data.json
 
 let allCharactersMaster = [];
 let artifactSetsMaster = [];
-let mainStatsMaster = [];
+let mainStatsPools = {};
 let subStatsMaster = [];
 
 // ====== App state (persisted) ======
 let characters = JSON.parse(localStorage.getItem('genshinTracker') || '[]');
 
 // DOM refs
-const addCharacterSelect = document.getElementById('addCharacterSelect');
+const addCharacterDropdown = document.getElementById('addCharacterDropdown');
 const addCharacterBtn = document.getElementById('addCharacterBtn');
 const charactersContainer = document.getElementById('charactersContainer');
 const trackerFilter = document.getElementById('trackerFilter');
@@ -30,21 +30,19 @@ fetch('data.json')
     allCharactersMaster = DATA.characters || [];
     artifactSetsMaster = DATA.artifactSets || [];
     mainStatsPools = {
-		sands: DATA.mainStats.sands || [],
-		goblet: DATA.mainStats.goblet || [],
-		circlet: DATA.mainStats.circlet || []
-	};
+      sands: DATA.mainStats.sands || [],
+      goblet: DATA.mainStats.goblet || [],
+      circlet: DATA.mainStats.circlet || []
+    };
     subStatsMaster = DATA.subStats || [];
 
-    // Start UI
-    populateAddCharacterSelect();
+    // Initialize UI
+    populateAddCharacterDropdown();
     addCharacterBtn.addEventListener('click', handleAddCharacter);
     trackerFilter.addEventListener('change', renderTracker);
     renderAll();
   })
-  .catch(err => {
-    console.error('Failed to load data.json:', err);
-  });
+  .catch(err => console.error('Failed to load data.json:', err));
 
 
 // ======================================================
@@ -54,26 +52,56 @@ function saveData() {
   localStorage.setItem('genshinTracker', JSON.stringify(characters));
 }
 
-function populateAddCharacterSelect() {
-  addCharacterSelect.innerHTML = '';
-  const empty = document.createElement('option');
-  empty.value = '';
-  empty.textContent = '-- Select character --';
-  addCharacterSelect.appendChild(empty);
+function populateAddCharacterDropdown() {
+  addCharacterDropdown.innerHTML = '';
+
+  const selectedDiv = document.createElement('div');
+  selectedDiv.className = 'selected';
+  selectedDiv.textContent = '-- Select character --';
+  addCharacterDropdown.appendChild(selectedDiv);
+
+  const optionsUl = document.createElement('ul');
+  optionsUl.className = 'options';
 
   const existing = new Set(characters.map(c => c.name));
   allCharactersMaster.forEach(name => {
     if (!existing.has(name)) {
-      const o = document.createElement('option');
-      o.value = name;
-      o.textContent = name;
-      addCharacterSelect.appendChild(o);
+      const li = document.createElement('li');
+      li.dataset.value = name;
+      li.textContent = name;
+      // Uncomment if you add icons
+      // const img = document.createElement('img');
+      // img.src = 'path/to/icon.png';
+      // li.prepend(img);
+      li.addEventListener('click', () => {
+        selectedDiv.textContent = name;
+        optionsUl.style.display = 'none';
+      });
+      optionsUl.appendChild(li);
+    }
+  });
+
+  addCharacterDropdown.appendChild(optionsUl);
+
+  selectedDiv.addEventListener('click', () => {
+    optionsUl.style.display = optionsUl.style.display === 'block' ? 'none' : 'block';
+  });
+
+  // Close dropdown if clicked outside
+  document.addEventListener('click', (e) => {
+    if (!addCharacterDropdown.contains(e.target)) {
+      optionsUl.style.display = 'none';
     }
   });
 }
 
+function getSelectedCharacter() {
+  const sel = addCharacterDropdown.querySelector('.selected');
+  return sel ? sel.textContent : '';
+}
+
 function renderAll() {
-  populateAddCharacterSelect();
+  populateAddCharacterDropdown();
   renderCharacters();
   updateTrackerFilter();
   renderTracker();
@@ -84,8 +112,8 @@ function renderAll() {
 // Add / Remove Character
 // ======================================================
 function handleAddCharacter() {
-  const name = addCharacterSelect.value;
-  if (!name) return alert('Choose a character from the dropdown.');
+  const name = getSelectedCharacter();
+  if (!name || name === '-- Select character --') return alert('Choose a character from the dropdown.');
 
   const newChar = {
     name,
@@ -137,8 +165,8 @@ function renderCharacters() {
     // Sections
     card.appendChild(buildSection(char, 'artifactSets', 'Artifact Set', artifactSetsMaster, 3));
     card.appendChild(buildSection(char, 'circletStats', 'Circlet', mainStatsPools.circlet));
-	card.appendChild(buildSection(char, 'gobletStats', 'Goblet', mainStatsPools.goblet));
-	card.appendChild(buildSection(char, 'sandsStats', 'Sands', mainStatsPools.sands));
+    card.appendChild(buildSection(char, 'gobletStats', 'Goblet', mainStatsPools.goblet));
+    card.appendChild(buildSection(char, 'sandsStats', 'Sands', mainStatsPools.sands));
     card.appendChild(buildSection(char, 'subStats', 'Substat', subStatsMaster));
 
     charactersContainer.appendChild(card);
@@ -172,7 +200,6 @@ function buildSection(charObj, arrayKey, label, optionsMaster, maxLen = 10) {
   container.appendChild(selectsRow);
   return container;
 }
-
 
 function createSelectBlock(charObj, arrayKey, optionsMaster, selectedValue, maxLen) {
   const block = document.createElement('div');
