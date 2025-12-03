@@ -32,7 +32,7 @@ fetch('data.json')
     subStatsMaster = DATA.subStats || [];
 
     // Start UI
-    populateAddCharacterDropdown();
+    populateCharacterDropdown();
     addCharacterBtn.addEventListener('click', handleAddCharacter);
     trackerFilter.addEventListener('change', renderTracker);
     renderAll();
