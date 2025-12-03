@@ -1,126 +1,189 @@
 // ======================================================
-// LOAD DATA.JSON (characters, artifacts, stats)
+// Full script.js - single-file app logic (copy-paste)
 // ======================================================
-let DATA = null;   // holds everything from data.json
 
-// App state
+// App data loaded from data.json
+let DATA = null;
+
+// App state (persisted)
 let characters = JSON.parse(localStorage.getItem('genshinTracker') || '[]');
 
 // DOM refs
-const addCharacterDropdown = document.getElementById('addCharacterDropdown');
+const addCharacterInput = () => document.getElementById('addCharacterInput');
+const addCharacterDropdown = () => document.getElementById('addCharacterDropdown');
 const addCharacterBtn = document.getElementById('addCharacterBtn');
 const charactersContainer = document.getElementById('charactersContainer');
 const trackerFilter = document.getElementById('trackerFilter');
 const trackerContainer = document.getElementById('trackerContainer');
 
-let mainStatsPools = {};
+// Pools (filled after JSON load)
+let mainStatsPools = { sands: [], goblet: [], circlet: [] };
 let subStatsMaster = [];
 
-// ======================================================
-// Fetch JSON and initialize app
-// ======================================================
+// --------------------
+// Load data.json then init
+// --------------------
 fetch('data.json')
   .then(res => res.json())
   .then(json => {
-    DATA = json;
-
+    DATA = json || {};
     mainStatsPools = {
-      sands: DATA.mainStats.sands || [],
-      goblet: DATA.mainStats.goblet || [],
-      circlet: DATA.mainStats.circlet || []
+      sands: DATA.mainStats?.sands || [],
+      goblet: DATA.mainStats?.goblet || [],
+      circlet: DATA.mainStats?.circlet || []
     };
     subStatsMaster = DATA.subStats || [];
 
-    // Start UI
-    populateAddCharacterDropdown();
+    // init UI listeners
+    initCharacterAutocomplete();
+    addCharacterBtn.addEventListener('click', handleAddCharacter);
+    trackerFilter.addEventListener('change', renderTracker);
+
+    // initial render
+    renderAll();
+  })
+  .catch(err => {
+    console.error('Failed to load data.json', err);
+    // still initialize autocomplete with empty DATA to avoid errors
+    DATA = DATA || { characters: [], artifactSets: [] };
+    initCharacterAutocomplete();
     addCharacterBtn.addEventListener('click', handleAddCharacter);
     trackerFilter.addEventListener('change', renderTracker);
     renderAll();
-  })
-  .catch(err => console.error('Failed to load data.json:', err));
+  });
 
-// ======================================================
-// Utility / Persistence
-// ======================================================
+// --------------------
+// Persistence
+// --------------------
 function saveData() {
   localStorage.setItem('genshinTracker', JSON.stringify(characters));
 }
 
-// ======================================================
-// CUSTOM DROPDOWN
-// ======================================================
-function populateAddCharacterDropdown() {
-  const container = document.getElementById('addCharacterDropdown');
-  container.innerHTML = '';
+// --------------------
+// Character autocomplete (input-driven prefix search)
+// --------------------
+function initCharacterAutocomplete() {
+  const input = addCharacterInput();
+  const dropdown = addCharacterDropdown();
 
-  // Selected div
-  const selectedDiv = document.createElement('div');
-  selectedDiv.className = 'selected';
-  selectedDiv.textContent = '-- Select character --';
-  container.appendChild(selectedDiv);
+  if (!input || !dropdown) return;
 
-  // Options container
-  const listDiv = document.createElement('div');
-  listDiv.className = 'options hidden';
+  // hide dropdown initially
+  dropdown.classList.add('hidden');
 
-  // Search input
-  const filterInput = document.createElement('input');
-  filterInput.type = 'text';
-  filterInput.placeholder = 'Type to search...';
-  filterInput.className = 'dropdown-filter';
-  listDiv.appendChild(filterInput);
-
-  // Add characters
-  DATA.characters.forEach(char => {
-    const item = document.createElement('div');
-    item.className = 'option-item';
-    item.textContent = char.name;
-
-    // When clicked, select character
-    item.addEventListener('click', e => {
-      e.stopPropagation(); // prevent document click from closing again
-      selectedDiv.textContent = char.name;
-      listDiv.classList.add('hidden');
-    });
-
-    listDiv.appendChild(item);
+  // clicking outside closes the dropdown
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.add-character-wrapper')) {
+      dropdown.classList.add('hidden');
+    }
   });
 
-  container.appendChild(listDiv);
+  // input event -> show prefix matches (exclude already added)
+  input.addEventListener('input', () => {
+    const q = input.value.trim().toLowerCase();
 
-  // Toggle dropdown
-  selectedDiv.addEventListener('click', e => {
-    e.stopPropagation(); // prevent document click from firing immediately
-    listDiv.classList.toggle('hidden');
-    filterInput.focus();
+    if (!q) {
+      dropdown.classList.add('hidden');
+      dropdown.innerHTML = '';
+      return;
+    }
+
+    // exclude already added characters
+    const existing = new Set(characters.map(c => c.name));
+
+    const matches = (DATA.characters || [])
+      .filter(c => !existing.has(c.name))
+      .filter(c => c.name.toLowerCase().startsWith(q))
+      .slice(0, 200); // safety cap
+
+    renderAutocompleteResults(matches);
   });
 
-  // Filter as you type
-  filterInput.addEventListener('input', () => {
-    const filter = filterInput.value.toLowerCase();
-    listDiv.querySelectorAll('.option-item').forEach(item => {
-      item.style.display = item.textContent.toLowerCase().includes(filter) ? 'flex' : 'none';
-    });
+  // keyboard navigation: Enter to add if there's exact match or highlighted item
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const text = input.value.trim();
+      if (!text) return;
+
+      // if exact match in DATA (and not already added) then add
+      const existing = new Set(characters.map(c => c.name));
+      const matchObj = (DATA.characters || []).find(c => c.name.toLowerCase() === text.toLowerCase() && !existing.has(c.name));
+      if (matchObj) {
+        addCharacterToState(matchObj.name);
+        input.value = '';
+        addCharacterDropdown().classList.add('hidden');
+      } else {
+        // otherwise do nothing (or alert)
+        // alert('No matching character to add.');
+        addCharacterDropdown().classList.add('hidden');
+      }
+    } else if (e.key === 'Escape') {
+      addCharacterDropdown().classList.add('hidden');
+    }
   });
 
-  // Close dropdown when clicking outside
-  document.addEventListener('click', e => {
-    if (!container.contains(e.target)) listDiv.classList.add('hidden');
-  });
+  // Render function
+  function renderAutocompleteResults(list) {
+    dropdown.innerHTML = ''; // clear
+    if (!list.length) {
+      dropdown.classList.add('hidden');
+      return;
+    }
+
+    // Build list items
+    for (const charObj of list) {
+      const li = document.createElement('li');
+      li.className = 'autocomplete-item';
+
+      // Optional icon (commented out)
+      // if (charObj.icon) {
+      //   const img = document.createElement('img');
+      //   img.src = charObj.icon;
+      //   img.alt = charObj.name;
+      //   li.appendChild(img);
+      // }
+
+      const span = document.createElement('span');
+      span.textContent = charObj.name;
+      li.appendChild(span);
+
+      li.addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        addCharacterInput().value = charObj.name;
+        dropdown.classList.add('hidden');
+      });
+
+      dropdown.appendChild(li);
+    }
+
+    dropdown.classList.remove('hidden');
+  }
 }
 
-function getSelectedCharacter() {
-  const selectedDiv = addCharacterDropdown.querySelector('.selected');
-  return selectedDiv ? selectedDiv.textContent : '';
-}
-
-// ======================================================
-// Add / Remove Character
-// ======================================================
+// --------------------
+// Add Character flow (button click)
+// - reads input value and attempts to add
+// - input must match a character in DATA and not already added
+// --------------------
 function handleAddCharacter() {
-  const name = getSelectedCharacter();
-  if (!name || name === '-- Select character --') return alert('Choose a character from the dropdown.');
+  const name = addCharacterInput().value.trim();
+  if (!name) return alert('Type a character name to add.');
 
+  // find in DATA
+  const existing = new Set(characters.map(c => c.name));
+  const charObj = (DATA.characters || []).find(c => c.name.toLowerCase() === name.toLowerCase());
+
+  if (!charObj) return alert('Character not found in data.json.');
+  if (existing.has(charObj.name)) return alert('Character already added.');
+
+  addCharacterToState(charObj.name);
+  addCharacterInput().value = '';
+  addCharacterDropdown().classList.add('hidden');
+  renderAll();
+}
+
+function addCharacterToState(name) {
   const newChar = {
     name,
     artifactSets: [],
@@ -129,24 +192,14 @@ function handleAddCharacter() {
     sandsStats: [],
     subStats: []
   };
-
   characters.push(newChar);
   saveData();
-  renderAll();
 }
 
-function removeCharacterAt(index) {
-  if (!confirm(`Remove ${characters[index].name}?`)) return;
-  characters.splice(index, 1);
-  saveData();
-  renderAll();
-}
-
-// ======================================================
-// Render Characters List (same as before)
-// ======================================================
+// --------------------
+// Rendering characters list & sections (artifact selects etc.)
+// --------------------
 function renderAll() {
-  populateAddCharacterDropdown();
   renderCharacters();
   updateTrackerFilter();
   renderTracker();
@@ -159,9 +212,9 @@ function renderCharacters() {
     const card = document.createElement('div');
     card.className = 'character-card';
 
+    // header
     const header = document.createElement('div');
     header.className = 'character-header';
-
     const h3 = document.createElement('h3');
     h3.textContent = char.name;
     header.appendChild(h3);
@@ -169,12 +222,20 @@ function renderCharacters() {
     const rmBtn = document.createElement('button');
     rmBtn.className = 'remove-character-btn';
     rmBtn.textContent = 'Remove';
-    rmBtn.addEventListener('click', () => removeCharacterAt(idx));
+    rmBtn.addEventListener('click', () => {
+      if (!confirm(`Remove ${char.name}?`)) return;
+      characters.splice(idx, 1);
+      saveData();
+      renderAll();
+    });
     header.appendChild(rmBtn);
 
     card.appendChild(header);
 
-    card.appendChild(buildSection(char, 'artifactSets', 'Artifact Set', DATA.artifactSets.map(a => a.name), 3));
+    // Sections: artifact sets, circlet, goblet, sands, substats
+    // artifactSets options from DATA.artifactSets (names)
+    const artifactSetNames = (DATA.artifactSets || []).map(a => a.name);
+    card.appendChild(buildSection(char, 'artifactSets', 'Artifact Set', artifactSetNames, 3));
     card.appendChild(buildSection(char, 'circletStats', 'Circlet', mainStatsPools.circlet));
     card.appendChild(buildSection(char, 'gobletStats', 'Goblet', mainStatsPools.goblet));
     card.appendChild(buildSection(char, 'sandsStats', 'Sands', mainStatsPools.sands));
@@ -182,11 +243,16 @@ function renderCharacters() {
 
     charactersContainer.appendChild(card);
   });
+
+  // After rendering characters, refresh autocomplete suggestions (so added characters no longer appear)
+  // If the input currently has text, re-trigger input event programmatically
+  const input = addCharacterInput();
+  if (input && input.value.trim()) {
+    input.dispatchEvent(new Event('input'));
+  }
 }
 
-// ======================================================
-// Sections / Selects (same as before)
-// ======================================================
+// buildSection & createSelectBlock are consistent with prior behavior
 function buildSection(charObj, arrayKey, label, optionsMaster, maxLen = 10) {
   const container = document.createElement('div');
   container.className = 'section-block';
@@ -221,16 +287,19 @@ function createSelectBlock(charObj, arrayKey, optionsMaster, selectedValue, maxL
 
   const select = document.createElement('select');
 
+  // Build occupied list from current values (prevent duplicates in same section)
   const currentVals = (charObj[arrayKey] || []).filter(Boolean);
   const occupied = new Set(currentVals);
   if (selectedValue) occupied.delete(selectedValue);
 
+  // Empty option
   const empty = document.createElement('option');
   empty.value = '';
   empty.textContent = '';
   select.appendChild(empty);
 
-  optionsMaster.forEach(opt => {
+  // Populate options, excluding occupied
+  (optionsMaster || []).forEach(opt => {
     if (occupied.has(opt)) return;
     const o = document.createElement('option');
     o.value = opt;
@@ -245,9 +314,7 @@ function createSelectBlock(charObj, arrayKey, optionsMaster, selectedValue, maxL
     const vals = Array.from(selectsRow.querySelectorAll('select'))
       .map(s => s.value)
       .filter(Boolean);
-
     charObj[arrayKey] = vals.slice(0, maxLen);
-
     saveData();
     renderAll();
   });
@@ -256,16 +323,17 @@ function createSelectBlock(charObj, arrayKey, optionsMaster, selectedValue, maxL
   return block;
 }
 
-// ======================================================
-// Tracker
-// ======================================================
+// --------------------
+// Tracker filter & render
+// --------------------
 function updateTrackerFilter() {
+  // Ensure trackerFilter exists
+  if (!trackerFilter) return;
+
   while (trackerFilter.options.length > 1) trackerFilter.remove(1);
 
   const setNames = new Set();
-  characters.forEach(c =>
-    (c.artifactSets || []).forEach(s => s && setNames.add(s))
-  );
+  characters.forEach(c => (c.artifactSets || []).forEach(s => s && setNames.add(s)));
 
   [...setNames].sort().forEach(s => {
     const o = document.createElement('option');
@@ -280,16 +348,13 @@ function renderTracker() {
 
   const filterSet = trackerFilter.value;
   if (!filterSet) {
-    trackerContainer.innerHTML =
-      '<div class="small-muted">Choose an artifact set to see which characters need its stats/substats.</div>';
+    trackerContainer.innerHTML = '<div class="small-muted">Choose an artifact set to see which characters need its stats/substats.</div>';
     return;
   }
 
   const matched = characters.filter(c => (c.artifactSets || []).includes(filterSet));
-
   if (!matched.length) {
-    trackerContainer.innerHTML =
-      '<div class="small-muted">No characters use this set.</div>';
+    trackerContainer.innerHTML = '<div class="small-muted">No characters use this set.</div>';
     return;
   }
 
