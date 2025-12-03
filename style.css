@@ -1,4 +1,4 @@
-:root{
+:root {
   --card-bg: #fff;
   --card-border: #ddd;
   --accent: #007bff;
@@ -42,7 +42,9 @@ button {
   cursor: pointer;
 }
 
-button:active { transform: translateY(1px); }
+button:active {
+  transform: translateY(1px);
+}
 
 /* Main layout */
 main {
@@ -58,11 +60,11 @@ main {
   border-radius: 8px;
   padding: 12px;
   margin-bottom: 12px;
-  box-shadow: 0 1px 0 rgba(0,0,0,0.02);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
 }
 
 .character-header {
-  display:flex;
+  display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
@@ -89,7 +91,7 @@ main {
 }
 
 .section-label {
-  display:block;
+  display: block;
   font-weight: 600;
   margin-bottom: 6px;
   color: var(--muted);
@@ -110,7 +112,7 @@ main {
 
 /* Each select block */
 .select-block {
-  display:flex;
+  display: flex;
   flex-direction: column;
 }
 
@@ -147,8 +149,7 @@ main {
 }
 
 .custom-dropdown .options {
-  /* hidden by default; JS can toggle the 'hidden' class */
-  display: none;
+  display: none; /* hidden by default */
   position: absolute;
   top: calc(100% + 2px);
   left: 0;
@@ -159,13 +160,15 @@ main {
   border-radius: 6px;
   background: #fff;
   z-index: 10;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   padding: 0;
   margin: 0;
   list-style: none;
 }
 
-.custom-dropdown .options.hidden { display: none; }
+.custom-dropdown .options.show {
+  display: block; /* toggle this class in JS */
+}
 
 .custom-dropdown .options .option-item {
   padding: 6px;
@@ -208,10 +211,10 @@ main {
 }
 
 .tracker-controls {
-  display:flex;
-  gap:8px;
-  align-items:center;
-  margin-bottom:8px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
 }
 
 .tracker-item {
@@ -219,21 +222,31 @@ main {
   border-bottom: 1px dashed #eee;
 }
 
-.tracker-item:last-child { border-bottom: none; }
+.tracker-item:last-child {
+  border-bottom: none;
+}
 
 .tracker-character-name {
   font-weight: 700;
   margin-bottom: 6px;
 }
 
-.small-muted { 
-  color: var(--muted); 
-  font-size: 0.95rem; 
+.small-muted {
+  color: var(--muted);
+  font-size: 0.95rem;
 }
 
 /* Responsive adjustments */
-@media (max-width: 720px){
-  main { grid-template-columns: 1fr; }
-  .select-block select { width: 100%; min-width: 0; }
-  .custom-dropdown { width: 100%; min-width: 0; }
+@media (max-width: 720px) {
+  main {
+    grid-template-columns: 1fr;
+  }
+  .select-block select {
+    width: 100%;
+    min-width: 0;
+  }
+  .custom-dropdown {
+    width: 100%;
+    min-width: 0;
+  }
 }
