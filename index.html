@@ -2,22 +2,33 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Genshin Artifact Tracker</title>
+  <title>Genshin Artifact Salvage Assistant</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="wrapper">
     <header>
-      <h1>Genshin Artifact Tracker</h1>
-      
+      <h1>Genshin Artifact Salvage Assistant</h1>
     </header>
 
     <main>
       <section>
-		<div id="addCharacterPanel" class="add-panel">
-			<div id="addCharacterDropdown" class="custom-dropdown"></div>
-			<button id="addCharacterBtn">Add Character</button>
-		</div>
+        <div id="addCharacterPanel" class="add-panel">
+          <!-- Search input + results list (autocomplete prefix-match) -->
+          <div class="add-character-wrapper">
+            <input
+              type="text"
+              id="addCharacterInput"
+              class="character-search-input"
+              placeholder="Type character name (e.g. 'Ki')"
+              autocomplete="off"
+            />
+            <ul id="addCharacterDropdown" class="character-search-dropdown hidden"></ul>
+          </div>
+
+          <button id="addCharacterBtn">Add Character</button>
+        </div>
+
         <h2>Characters</h2>
         <div id="charactersContainer"></div>
       </section>
