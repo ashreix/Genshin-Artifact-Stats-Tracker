@@ -322,7 +322,7 @@ function onAddCharacterClicked() {
 }
 
 function addCharacterToState(name) {
-    characters.push({
+    characters.unshift({
         name,
         artifactSets: [],
         circletStats: [],
