@@ -1,18 +1,9 @@
-// ======================================================
-// script.js - tabbed UI rewrite (copy/paste)
-// Uses data.json in same folder (characters/artifactSets/mainStats/subStats)
-// ======================================================
-
-// App data
 let DATA = null;
 
-// Persisted state
 let characters = JSON.parse(localStorage.getItem('genshinTracker') || '[]');
 
-// DOM helper
 const $ = (id) => document.getElementById(id);
 
-// DOM refs (as functions so they exist whether in characters tab or tracker tab)
 const addCharacterInput = () => $('addCharacterInput');
 const addCharacterResults = () => $('addCharacterResults');
 const addCharacterBtn = () => $('addCharacterBtn');
@@ -20,7 +11,6 @@ const charactersContainer = () => $('charactersContainer');
 const trackerContainer = () => $('trackerContainer');
 const trackerCustom = () => $('trackerCustom');
 
-// Pools (filled after load)
 let mainStatsPools = {
     sands: [],
     goblet: [],
@@ -28,7 +18,6 @@ let mainStatsPools = {
 };
 let subStatsMaster = [];
 
-// Load JSON then init
 fetch('data.json')
     .then(r => r.json())
     .then(json => {
@@ -50,34 +39,21 @@ fetch('data.json')
         initUI();
     });
 
-// Save
 function saveState() {
     localStorage.setItem('genshinTracker', JSON.stringify(characters));
 }
 
-// ----------------------
-// UI Init
-// ----------------------
 function initUI() {
-    // init tabs
     initTabs();
-
-    // Character autocomplete input behavior (prefix)
     initCharacterSearch();
-
-    // tracker custom dropdown
     buildTrackerCustom();
 
-    // Add button
-    if (addCharacterBtn()) addCharacterBtn().addEventListener('click', onAddCharacterClicked);
+    if (addCharacterBtn()) 
+		addCharacterBtn().addEventListener('click', onAddCharacterClicked);
 
-    // initial render (characters tab visible by default)
     renderAll();
 }
 
-// ----------------------
-// TABS
-// ----------------------
 function initTabs() {
     const tabBtns = document.querySelectorAll('.tab-btn');
     tabBtns.forEach(btn => {
@@ -101,9 +77,7 @@ function switchTab(tabId) {
         }
     });
 
-    // If switching to tracker tab, ensure tracker UI updated
     if (tabId === 'trackerTab') {
-        // rebuild tracker options and render
         const container = trackerCustom();
         if (container) {
             const panel = container.querySelector('.options');
@@ -113,16 +87,12 @@ function switchTab(tabId) {
     }
 }
 
-// ----------------------
-// Character search (typing -> show prefix results)
-// ----------------------
 function initCharacterSearch() {
     const input = addCharacterInput();
     const results = addCharacterResults();
 
     if (!input || !results) return;
 
-    // hide initially
     results.classList.add('hidden');
 
     // click outside closes
@@ -130,7 +100,6 @@ function initCharacterSearch() {
         if (!e.target.closest('.add-character-wrapper')) results.classList.add('hidden');
     });
 
-    // input handler
     input.addEventListener('input', () => {
         const q = input.value.trim().toLowerCase();
         if (!q) {
@@ -149,7 +118,7 @@ function initCharacterSearch() {
         renderCharacterResults(matches);
     });
 
-    // keyboard: Enter tries to add exact match
+    // Enter key tries to add exact match
     input.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
             const val = input.value.trim();
@@ -206,9 +175,6 @@ function initCharacterSearch() {
     }
 }
 
-// ----------------------
-// Tracker custom dropdown (uses unique sets used by characters)
-// ----------------------
 function buildTrackerCustom() {
     const container = trackerCustom();
     if (!container) return;
@@ -216,7 +182,6 @@ function buildTrackerCustom() {
     container.innerHTML = '';
     container.className = 'custom-dropdown small';
 
-    // selected area
     const selected = document.createElement('div');
     selected.className = 'selected';
     const label = document.createElement('span');
@@ -225,34 +190,29 @@ function buildTrackerCustom() {
     selected.appendChild(label);
     container.appendChild(selected);
 
-    // options panel
     const panel = document.createElement('div');
     panel.className = 'options';
     container.appendChild(panel);
 
-    // toggle open/close
     selected.addEventListener('click', (e) => {
         e.stopPropagation();
         populateTrackerOptions(panel);
         panel.classList.toggle('show');
     });
 
-    // close when clicking outside
     document.addEventListener('click', (e) => {
         if (!container.contains(e.target)) panel.classList.remove('show');
     });
 
-    // expose a function to set selected
     container.setSelected = (text) => {
         label.textContent = text;
         renderTracker();
     };
 }
 
-// populate tracker options from currently used sets (unique across characters)
+// populate tracker options from currently used sets
 function populateTrackerOptions(panel) {
     panel.innerHTML = '';
-    // gather sets currently used across characters
     const used = new Set();
     characters.forEach(c => (c.artifactSets || []).forEach(s => s && used.add(s)));
     const list = [...used].sort();
@@ -287,7 +247,6 @@ function populateTrackerOptions(panel) {
     }
 }
 
-// render tracker: read selected label text as filter
 function renderTracker() {
     const container = trackerCustom();
     if (!container) return;
@@ -349,9 +308,6 @@ function renderTracker() {
 
 }
 
-// ----------------------
-// Add character flow (button click)
-// ----------------------
 function onAddCharacterClicked() {
     const name = addCharacterInput().value.trim();
     if (!name) return alert('Type a character name to add.');
@@ -377,15 +333,10 @@ function addCharacterToState(name) {
     saveState();
 }
 
-// ----------------------
-// Render characters grid & sections
-// ----------------------
 function renderAll() {
     renderCharacters();
-    // tracker options depend on characters; rebuild selected panel (keeps selection text)
     const container = trackerCustom();
     if (container) populateTrackerOptions(container.querySelector('.options'));
-    // If currently on tracker tab, update tracker view
     const trackerTabActive = document.getElementById('trackerTab').classList.contains('active');
     if (trackerTabActive) renderTracker();
 }
@@ -398,11 +349,9 @@ function renderCharacters() {
         const card = document.createElement('div');
         card.className = 'character-card';
 
-        // --- Create a wrapper for image + content ---
         const wrapper = document.createElement('div');
         wrapper.className = 'char-wrapper';
 
-        // Image (left side)
         const iconSrc = getCharacterIcon(charObj.name);
         if (iconSrc) {
             const img = document.createElement('img');
@@ -411,11 +360,9 @@ function renderCharacters() {
             wrapper.appendChild(img);
         }
 
-        // Content container (right side: header + grid)
         const content = document.createElement('div');
         content.className = 'char-content';
 
-        // Header
         const header = document.createElement('div');
         header.className = 'character-header';
 
@@ -455,7 +402,6 @@ function renderCharacters() {
     });
 }
 
-// Helper: create a column element with vertical stacked selects and dynamic add/shift behavior
 function makeColumn(charObj, arrayKey, label, optionsMaster, maxLen = 10) {
     const col = document.createElement('div');
     col.className = 'section-block';
@@ -469,7 +415,6 @@ function makeColumn(charObj, arrayKey, label, optionsMaster, maxLen = 10) {
 
     // Ensure array exists and compact it
     const arr = (charObj[arrayKey] || []).filter(Boolean).slice(0, maxLen);
-    // Render each existing value as a select
     arr.forEach((val, i) => {
         selectsWrap.appendChild(makeSelectBlock(charObj, arrayKey, optionsMaster, val, maxLen));
     });
@@ -483,7 +428,6 @@ function makeColumn(charObj, arrayKey, label, optionsMaster, maxLen = 10) {
     return col;
 }
 
-// Creates a single select DOM (native) for a column, but with dynamic rules:
 function makeSelectBlock(charObj, arrayKey, optionsMaster, selectedValue, maxLen) {
     const wrapper = document.createElement('div');
     const select = document.createElement('select');
@@ -509,7 +453,6 @@ function makeSelectBlock(charObj, arrayKey, optionsMaster, selectedValue, maxLen
 
     select.value = selectedValue || '';
 
-    // change handler
     select.addEventListener('change', () => {
         // parentCol used for possible animations in future; here we simply compact & re-render
         const parentCol = wrapper.parentElement;

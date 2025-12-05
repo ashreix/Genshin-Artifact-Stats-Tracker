@@ -6,7 +6,6 @@
 	--gap: 10px;
 }
 
-/* Page */
 body {
 	font-family: Arial, Helvetica, sans-serif;
 	background: #f6f8fa;
@@ -20,12 +19,11 @@ body {
 	margin: 0 auto 0 50px;
 }
 
-/* Header */
 header {
 	margin-bottom: 12px;
 }
 
-/* TAB NAV */
+ /* TAB NAV */
 .tabs {
 	display: flex;
 	gap: 8px;
@@ -46,7 +44,6 @@ header {
 	box-shadow: 0 2px 8px rgba(0, 123, 255, 0.08);
 }
 
-/* Page main layout: tab content area will contain only the active tab's content */
 main {
 	position: relative;
 }
@@ -72,7 +69,6 @@ main {
 /* Tracker column layout (standalone inside its tab) */
 .tracker-section {}
 
-/* Add panel */
 .add-panel {
 	display: flex;
 	gap: 8px;
@@ -80,7 +76,6 @@ main {
 	margin-bottom: 10px;
 }
 
-/* Buttons */
 button {
 	padding: 6px 10px;
 	border-radius: 6px;
@@ -209,7 +204,6 @@ button:active {
 	gap: 8px;
 }
 
-/* styled native select to look consistent */
 .column-selects select {
 	padding: 6px 8px;
 	border-radius: 6px;
@@ -252,7 +246,6 @@ button:active {
 	text-overflow: ellipsis;
 }
 
-/* options panel */
 .custom-dropdown .options {
 	display: none;
 	position: absolute;
@@ -331,7 +324,6 @@ button:active {
 	padding: 20px;
 }
 
-/* Icon: same size as in character panel */
 .tracker-wrapper .char-icon {
     width: 90px;
     height: auto;
@@ -340,7 +332,6 @@ button:active {
     object-fit: cover;
 }
 
-/* Content: name + stats lines */
 .tracker-content {
     flex: 1;
 }
@@ -371,7 +362,6 @@ button:active {
 		grid-template-columns: repeat(2, 1fr);
 	}
 
-	/* compact on smaller screens */
 	.add-character-wrapper {
 		width: 100%;
 	}
