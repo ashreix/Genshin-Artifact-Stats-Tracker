@@ -170,8 +170,8 @@
 	{"name": "Long Night's Oath", "icon": "icons/artifacts/long_nights_oath.webp"},
 	{"name": "Night of the Sky's Unveiling", "icon": "icons/artifacts/night_of_the_skys_unveiling.webp"},
 	{"name": "Silken Moon's Serenade", "icon": "icons/artifacts/silken_moons_serenade.webp"},
-	{"name": "A Day Carved From Rising Winds", "icon": "icons/rising_winds.webp"},
-	{"name": "Aubade of Morningstar and Moon", "icon": "icons/morningstar_and_moon.webp"}
+	{"name": "A Day Carved From Rising Winds", "icon": "icons/artifacts/rising_winds.webp"},
+	{"name": "Aubade of Morningstar and Moon", "icon": "icons/artifacts/morningstar_and_moon.webp"}
   ],
   "mainStats": {
     "sands": [
