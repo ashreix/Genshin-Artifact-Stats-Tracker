@@ -109,7 +109,8 @@
 	{"name": "Yoimiya", "icon": "icons/characters/yoimiya.webp"},
 	{"name": "Yumemizuki Mizuki", "icon": "icons/characters/yumemizuki_mizuki.webp"},
 	{"name": "Yun Jin", "icon": "icons/characters/yun_jin.webp"},
-	{"name": "Zhongli", "icon": "icons/characters/zhongli.webp"}
+	{"name": "Zhongli", "icon": "icons/characters/zhongli.webp"},
+	{"name": "Zibai", "icon": "icons/characters/zibai.webp"}
   ],
   "artifactSets": [
 	{"name": "Initiate", "icon": "icons/artifacts/initiate.webp"},
